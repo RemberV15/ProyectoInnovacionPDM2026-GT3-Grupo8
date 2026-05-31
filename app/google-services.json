@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "588535123769",
+    "project_id": "proyectoinnovacentinela",
+    "storage_bucket": "proyectoinnovacentinela.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:588535123769:android:62ef9a82c59cf26554e2e8",
+        "android_client_info": {
+          "package_name": "com.example.proyectoinnovacionpdm2026_gt3_grupo8"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBxZTI4-AGHxao6V2WEL6J9tzvBItAhGxM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
