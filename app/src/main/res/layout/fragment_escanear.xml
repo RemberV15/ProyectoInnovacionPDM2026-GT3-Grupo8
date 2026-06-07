@@ -1,14 +1,145 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EscanearFragment">
+    android:background="#333333"
+    tools:context=".EscanerFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/llHeaderEscaner"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="20dp"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/tv_titulo_escaner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Gestor de Inventario\nInteligente - Escanear"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+        android:id="@+id/barcode_scanner"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        tools:background="#444444"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clOverlaySombra"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#66000000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner">
+
+        <ImageButton
+            android:id="@+id/btnFlass"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Linterna"
+            android:scaleType="fitCenter"
+            android:src="@drawable/close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white"
+            tools:src="@android:drawable/ic_menu_compass" />
+
+        <ImageButton
+            android:id="@+id/btnConfig"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Configuración"
+            android:scaleType="fitCenter"
+            android:src="@drawable/filter_list"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white"
+            tools:src="@android:drawable/ic_menu_manage" />
+
+        <View
+            android:id="@+id/viewScanFrame"
+            android:layout_width="260dp"
+            android:layout_height="220dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/scanner_frame"
+            app:layout_constraintBottom_toTopOf="@+id/tvApuntaCamara"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.4" />
+
+        <View
+            android:layout_width="240dp"
+            android:layout_height="2dp"
+            android:background="#FF0000"
+            app:layout_constraintBottom_toBottomOf="@id/viewScanFrame"
+            app:layout_constraintEnd_toEndOf="@id/viewScanFrame"
+            app:layout_constraintStart_toStartOf="@id/viewScanFrame"
+            app:layout_constraintTop_toTopOf="@id/viewScanFrame" />
+
+        <TextView
+            android:id="@+id/tvApuntaCamara"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="40dp"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Apunta la cámara al código de barras o QR"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/btnConfirmarProducto"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmarProducto"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginBottom="12dp"
+            android:text="Confirmar Producto Escaneado"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:backgroundTint="#6750A4"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toTopOf="@+id/btnEntradaManual" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEntradaManual"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_marginHorizontal="32dp"
+            android:layout_marginBottom="110dp"
+            android:text="Entrada Manual"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:strokeColor="@color/white"
+            app:strokeWidth="1dp"
+            app:cornerRadius="16dp"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

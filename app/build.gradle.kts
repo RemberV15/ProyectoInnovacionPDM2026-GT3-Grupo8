@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.proyectoinnovacionpdm2026_gt3_grupo8"
-        minSdk = 26 // Lineamiento estricto de la cátedra cumplido [cite: 14]
+        minSdk = 26 // Lineamiento estricto de la cátedra
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -46,7 +46,7 @@ dependencies {
 
     // Escaneo de Códigos - ZXing (o ML Kit como opción moderna)
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
-
+    implementation("androidx.appcompat:appcompat:1.6.1") //Para compatibilidad de vectores
     // Carga de imágenes - Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
 
