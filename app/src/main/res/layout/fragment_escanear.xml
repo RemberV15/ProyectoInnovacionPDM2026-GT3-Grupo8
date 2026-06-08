@@ -27,25 +27,24 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <com.journeyapps.barcodescanner.DecoratedBarcodeView
+    <com.journeyapps.barcodescanner.BarcodeView
         android:id="@+id/barcode_scanner"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        tools:background="#444444"
+        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/clOverlaySombra"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#66000000"
+        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llHeaderEscaner">
+        app:layout_constraintEnd_toEndOf="parent"
+        android:background="#66000000">
 
         <ImageButton
             android:id="@+id/btnFlass"
@@ -55,13 +54,10 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Linterna"
             android:scaleType="fitCenter"
-
             android:src="@drawable/ic_linterna_off"
-
-            app:tint="@color/white"
-
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
 
         <ImageButton
             android:id="@+id/btnConfig"
@@ -74,14 +70,12 @@
             android:src="@drawable/filter_list"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white"
-            tools:src="@android:drawable/ic_menu_manage" />
+            app:tint="@color/white" />
 
         <View
             android:id="@+id/viewScanFrame"
             android:layout_width="260dp"
             android:layout_height="220dp"
-            android:layout_marginBottom="24dp"
             android:background="@drawable/scanner_frame"
             app:layout_constraintBottom_toTopOf="@+id/tvApuntaCamara"
             app:layout_constraintEnd_toEndOf="parent"
@@ -103,28 +97,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="40dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="40dp"
             android:gravity="center"
             android:text="Apunta la cámara al código de barras o QR"
             android:textColor="@color/white"
             android:textSize="16sp"
-            app:layout_constraintBottom_toTopOf="@+id/btnConfirmarProducto"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnConfirmarProducto"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginBottom="110dp"
-            android:text="Confirmar Producto Escaneado"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:backgroundTint="#6750A4"
-            app:cornerRadius="16dp"
-            app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

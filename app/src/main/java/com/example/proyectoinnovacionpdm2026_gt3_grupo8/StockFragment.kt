@@ -13,11 +13,34 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
 
         val rvStock = view.findViewById<RecyclerView>(R.id.rv_stock)
 
-        // Estructurados correctamente respetando tipos (Int en cantidad)
         val listaProductos = listOf(
-            Producto("2238359", "Café Vala", "Bebidas", 50, "Estante A1", ""),
-            Producto("3238355", "Botella Aramentos", "Envases", 20, "Estante B2", ""),
-            Producto("3238359", "Producto Vala", "General", 20, "Estante A1", "")
+            Producto(
+                codigo = "2238359",
+                nombre = "Café Vala",
+                descripcion = "Café instantáneo premium en frasco",
+                categoria = "Bebidas",
+                cantidad = 50,
+                ubicacion = "Estante A1",
+                imagen_url = ""
+            ),
+            Producto(
+                codigo = "3238355",
+                nombre = "Botella Aramentos",
+                descripcion = "Botella de plástico biodegradable 500ml",
+                categoria = "Envases",
+                cantidad = 20,
+                ubicacion = "Estante B2",
+                imagen_url = ""
+            ),
+            Producto(
+                codigo = "3238359",
+                nombre = "Producto Vala",
+                descripcion = "Descripción detallada del producto de prueba",
+                categoria = "General",
+                cantidad = 20,
+                ubicacion = "Estante A1",
+                imagen_url = ""
+            )
         )
 
         rvStock.layoutManager = LinearLayoutManager(context)

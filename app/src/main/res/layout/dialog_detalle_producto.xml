@@ -2,8 +2,8 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://tools.android.com/tools"
-    android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
     android:layout_height="wrap_content"
     app:cardCornerRadius="24dp"
     app:cardElevation="8dp"
@@ -21,17 +21,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp">
-
             <TextView
                 android:id="@+id/tvTituloDialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="Detalles del Producto: Office Chair"
+                android:text="Detalles del Producto"
                 android:textColor="#000000"
                 android:textStyle="bold"
                 android:textSize="14sp" />
-
             <ImageButton
                 android:id="@+id/btnCerrarX"
                 android:layout_width="32dp"
@@ -51,7 +49,6 @@
             app:strokeWidth="0dp"
             app:cardBackgroundColor="#F5F5F5"
             android:layout_marginBottom="16dp">
-
             <ImageView
                 android:id="@+id/ivDetalleProductoPreview"
                 android:layout_width="match_parent"
@@ -65,7 +62,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp">
-
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -73,26 +69,22 @@
                 android:layout_toStartOf="@id/ivDetalleCodigo"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="8dp">
-
                 <TextView
                     android:id="@+id/tvDetalleNombre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Office Chair"
-                    android:textSize="24sp"
+                    android:text="Cargando..."
+                    android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="#000000" />
-
                 <TextView
                     android:id="@+id/tvDetalleSKU"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="SKU: SKU-OC-HM-001"
+                    android:text="SKU: ----"
                     android:textColor="#49454F"
-                    android:textSize="14sp"
-                    android:layout_marginTop="2dp"/>
+                    android:textSize="14sp" />
             </LinearLayout>
-
             <ImageView
                 android:id="@+id/ivDetalleCodigo"
                 android:layout_width="110dp"
@@ -108,71 +100,53 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="12dp">
-
-            <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_weight="1">
-                <TextView android:text="Estado:" android:textSize="13sp" android:textColor="#666666"/>
-                <TextView android:id="@+id/tvDetalleEstado" android:text="✔ Disponible" android:textStyle="bold" android:textColor="#2E7D32" android:textSize="15sp" android:layout_marginTop="2dp"/>
-            </LinearLayout>
-
-            <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_weight="1">
-                <TextView android:text="Ubicación:" android:textSize="13sp" android:textColor="#666666"/>
-                <TextView android:id="@+id/tvDetalleUbicacion" android:text="Almacén C, Estante C" android:textStyle="bold" android:textColor="#000000" android:textSize="15sp" android:layout_marginTop="2dp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2"
-            android:layout_marginBottom="12dp">
-
-            <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_weight="1">
-                <TextView android:text="Cantidad Total:" android:textSize="13sp" android:textColor="#666666"/>
-                <TextView android:id="@+id/tvDetalleCantidad" android:text="25 unidades" android:textStyle="bold" android:textColor="#000000" android:textSize="15sp" android:layout_marginTop="2dp"/>
-            </LinearLayout>
-
-            <LinearLayout android:orientation="vertical" android:layout_width="0dp" android:layout_weight="1">
-                <TextView android:text="Proveedor:" android:textSize="13sp" android:textColor="#666666"/>
-                <TextView android:id="@+id/tvDetalleProveedor" android:text="Herman Miller Inc." android:textStyle="bold" android:textColor="#000000" android:textSize="15sp" android:layout_marginTop="2dp"/>
-            </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginBottom="24dp">
-            <TextView android:text="Categoría:" android:textSize="13sp" android:textColor="#666666"/>
-            <TextView android:id="@+id/tvDetalleCategoria" android:text="Mobiliario" android:textStyle="bold" android:textColor="#000000" android:textSize="15sp" android:layout_marginTop="2dp"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2" android:layout_marginBottom="8dp">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Estado:" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleEstado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Disponible" android:textStyle="bold" android:textColor="#2E7D32" android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ubicación:" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleUbicacion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="----" android:textStyle="bold" android:textColor="#000000" android:textSize="14sp"/>
+                </LinearLayout>
+            </LinearLayout>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal" android:weightSum="2">
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cantidad:" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleCantidad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textStyle="bold" android:textColor="#000000" android:textSize="14sp"/>
+                </LinearLayout>
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Categoría:" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleCategoria" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="----" android:textStyle="bold" android:textColor="#000000" android:textSize="14sp"/>
+                </LinearLayout>
+            </LinearLayout>
         </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetalleEditar"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
+            android:layout_height="50dp"
             android:text="Editar Producto"
             android:textAllCaps="false"
             android:textStyle="bold"
-            app:cornerRadius="50dp"
-            android:layout_marginBottom="10dp"
+            app:cornerRadius="25dp"
+            android:layout_marginBottom="8dp"
             android:backgroundTint="#6750A4"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetalleCerrar"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:text="Cerrar Detalles"
+            android:layout_height="50dp"
+            android:text="Cerrar"
             android:textAllCaps="false"
             android:textStyle="bold"
             android:textColor="#666666"
             app:strokeColor="#DDDDDD"
-            app:cornerRadius="50dp"
-            android:layout_marginBottom="10dp"/>
+            app:cornerRadius="25dp"
+            android:layout_marginBottom="8dp"/>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetalleHistorial"
@@ -185,6 +159,5 @@
             android:textColor="#6750A4"
             app:icon="@android:drawable/ic_menu_recent_history"
             app:iconTint="#6750A4"/>
-
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
