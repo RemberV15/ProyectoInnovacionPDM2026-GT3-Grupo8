@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F4F2FF"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    tools:context=".AgregarProductoFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +31,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="&lt; Hola, Bienvenido"
+                    android:text="Hola, Bienvenido"
                     android:textColor="#666666"
                     android:textSize="14sp"
                     android:layout_marginBottom="4dp"/>
@@ -103,7 +105,7 @@
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="12dp"
                     app:endIconMode="custom"
                     app:endIconDrawable="@android:drawable/ic_menu_camera"
                     app:boxBackgroundColor="#F8F6FF"
@@ -120,6 +122,28 @@
                         android:layout_height="wrap_content"
                         android:paddingVertical="16dp"
                         android:hint="SKU / Código de Barras" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundColor="#F8F6FF"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/autoCompleteCategoria"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:paddingVertical="16dp"
+                        android:hint="Categoría del Producto" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -201,7 +225,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etUbicacion"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:paddingVertical="16dp"
                             android:hint="Ubicación" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -210,15 +234,17 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"> <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnGuardarProducto"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:text="Guardar Producto ✓"
-                    android:textAllCaps="false"
-                    app:cornerRadius="50dp"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#6750A4"/>
+                    android:orientation="vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnGuardarProducto"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:text="Guardar Producto ✓"
+                        android:textAllCaps="false"
+                        app:cornerRadius="50dp"
+                        android:layout_marginBottom="12dp"
+                        android:backgroundTint="#6750A4"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnCancelar"

@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         btnInicio.setOnClickListener { navegar(InicioFragment(), R.id.nav_inicio) }
         btnStock.setOnClickListener { navegar(StockFragment(), R.id.nav_stock) }
-        btnEscanear.setOnClickListener { navegar(EscanearFragment(), R.id.nav_escanear) }
+        btnEscanear.setOnClickListener { navegar(EscanerFragment(), R.id.nav_escanear) }
     }
 
     private fun navegar(fragmento: Fragment, idBoton: Int) {

@@ -24,16 +24,32 @@
             android:background="#EAEAEA"
             android:scaleType="centerCrop" />
 
-        <TextView
-            android:id="@+id/tv_nombre_reciente"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_weight="1"
-            android:text="Nombre del Producto"
-            android:textColor="#000000"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_nombre_reciente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nombre del Producto"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_detalles_reciente"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Categoría y SKU"
+                android:textColor="#666666"
+                android:textSize="13sp"
+                android:layout_marginTop="2dp" />
+        </LinearLayout>
 
         <ImageView
             android:id="@+id/iv_escanear_reciente"

@@ -23,9 +23,9 @@ class StockAdapter(private val lista: List<Producto>) : RecyclerView.Adapter<Sto
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
         holder.nombre.text = item.nombre
-        holder.sku.text = "SKU: ${item.sku}"
-        holder.cantidad.text = item.cantidad
-        holder.estante.text = item.estante
+        holder.sku.text = "SKU: ${item.codigo}" // Corregido: .sku no existe en el modelo, es .codigo
+        holder.cantidad.text = "${item.cantidad} unidades" // Corregido: Se añade String template para castear el Int
+        holder.estante.text = item.ubicacion // Corregido: .estante no existe, es .ubicacion
     }
 
     override fun getItemCount() = lista.size

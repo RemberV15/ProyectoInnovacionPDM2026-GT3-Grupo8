@@ -7,11 +7,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class RecienteAdapter(private val lista: List<Producto>) : RecyclerView.Adapter<RecienteAdapter.ViewHolder>() {
+class RecienteAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<RecienteAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val ivProducto: ImageView = view.findViewById(R.id.iv_producto_reciente)
         val tvNombre: TextView = view.findViewById(R.id.tv_nombre_reciente)
+
+        val tvDetalles: TextView = view.findViewById(R.id.tv_detalles_reciente)
         val ivEscanear: ImageView = view.findViewById(R.id.iv_escanear_reciente)
     }
 
@@ -22,11 +24,16 @@ class RecienteAdapter(private val lista: List<Producto>) : RecyclerView.Adapter<
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
+
         holder.tvNombre.text = item.nombre
 
-        // Aquí luego puedes usar librerías como Glide o Picasso para cargar la imagen real:
-        // Glide.with(holder.itemView.context).load(item.urlImagen).into(holder.ivProducto)
+        holder.tvDetalles.text = "Categoría: ${item.categoria}\nSKU: ${item.codigo}"
     }
 
     override fun getItemCount() = lista.size
+
+    fun actualizarLista(nuevaLista: List<Producto>) {
+        this.lista = nuevaLista
+        notifyDataSetChanged()
+    }
 }

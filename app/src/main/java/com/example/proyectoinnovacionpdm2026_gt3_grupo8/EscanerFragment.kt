@@ -1,12 +1,18 @@
-package com.example.proyectoinnovacionpdm2026_gt3_grupo8 // Verifica tu paquete exacto
+package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FirebaseFirestore
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 
 class EscanerFragment : Fragment() {
@@ -14,6 +20,22 @@ class EscanerFragment : Fragment() {
     private var barcodeScannerView: DecoratedBarcodeView? = null
     private var isFlashOn = false
     private var camaraActivada = false
+    private val db = FirebaseFirestore.getInstance()
+    private var codigoDetectadoActual: String = ""
+
+    private val solicitarPermisoCamaraLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { esConcedido ->
+        if (esConcedido) {
+            iniciarEscaneoSeguro()
+        } else {
+            Toast.makeText(
+                context,
+                "Se requiere el permiso de la cámara para poder escanear códigos de barras.",
+                Toast.LENGTH_LONG
+            ).show()
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -26,21 +48,25 @@ class EscanerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         barcodeScannerView = view.findViewById(R.id.barcode_scanner)
-        val btnFlash = view.findViewById<View>(R.id.btnFlass)
+
+        val btnFlash = view.findViewById<ImageButton>(R.id.btnFlass)
         val btnConfig = view.findViewById<View>(R.id.btnConfig)
         val btnConfirmar = view.findViewById<MaterialButton>(R.id.btnConfirmarProducto)
-        val btnManual = view.findViewById<MaterialButton>(R.id.btnEntradaManual)
 
         btnFlash.setOnClickListener {
             if (camaraActivada) {
                 if (isFlashOn) {
                     barcodeScannerView?.setTorchOff()
                     isFlashOn = false
-                    Toast.makeText(context, "Linterna apagada", Toast.LENGTH_SHORT).show()
+
+                    btnFlash.setImageResource(R.drawable.ic_linterna_off)
+
                 } else {
                     barcodeScannerView?.setTorchOn()
                     isFlashOn = true
-                    Toast.makeText(context, "Linterna encendida", Toast.LENGTH_SHORT).show()
+
+                    btnFlash.setImageResource(R.drawable.ic_linterna_on)
+
                 }
             }
         }
@@ -50,14 +76,21 @@ class EscanerFragment : Fragment() {
         }
 
         btnConfirmar.setOnClickListener {
-            Toast.makeText(context, "Producto confirmado", Toast.LENGTH_SHORT).show()
+            if (codigoDetectadoActual.isNotEmpty()) {
+                verificarYProcederConProducto(codigoDetectadoActual)
+            } else {
+                Toast.makeText(context, "Por favor escanea un código primero", Toast.LENGTH_SHORT).show()
+            }
         }
+    }
 
-        btnManual.setOnClickListener {
-            activity?.supportFragmentManager?.beginTransaction()?.apply {
-                replace(R.id.content_container, AgregarProductoFragment())
-                addToBackStack(null)
-                commit()
+    private fun verificarPermisosYEncenderCamara() {
+        context?.let { ctx ->
+            val estadoPermiso = ContextCompat.checkSelfPermission(ctx, Manifest.permission.CAMERA)
+            if (estadoPermiso == PackageManager.PERMISSION_GRANTED) {
+                iniciarEscaneoSeguro()
+            } else {
+                solicitarPermisoCamaraLauncher.launch(Manifest.permission.CAMERA)
             }
         }
     }
@@ -65,30 +98,64 @@ class EscanerFragment : Fragment() {
     private fun iniciarEscaneoSeguro() {
         if (camaraActivada) return
 
-        // Configuramos el detector continuo de códigos de barra
         barcodeScannerView?.decodeContinuous { result ->
             result.text?.let { codigoEscaneado ->
-                barcodeScannerView?.pause() // Pausa inmediata para procesar la lectura sin duplicados
-
+                codigoDetectadoActual = codigoEscaneado
                 requireActivity().runOnUiThread {
-                    Toast.makeText(context, "Código detectado: $codigoEscaneado", Toast.LENGTH_LONG).show()
-
-                    //Aquí implementamos la búsqueda en Supabase con el 'codigoEscaneado'
-
+                    Toast.makeText(context, "Código detectado: $codigoEscaneado. Presiona Confirmar.", Toast.LENGTH_SHORT).show()
                 }
             }
         }
 
-        // Despierta el hardware de la cámara de forma segura
+        barcodeScannerView?.barcodeView?.framingRectSize = com.journeyapps.barcodescanner.Size(0, 0)
+        barcodeScannerView?.setStatusText("")
+
         barcodeScannerView?.resume()
         camaraActivada = true
+    }
+
+    private fun verificarYProcederConProducto(codigo: String) {
+        barcodeScannerView?.pause()
+
+        db.collection("productos").document(codigo).get()
+            .addOnSuccessListener { document ->
+                if (document != null && document.exists()) {
+                    val producto = document.toObject(Producto::class.java)
+                    if (producto != null) {
+                        val dialog = DetalleProductoDialog.newInstance(producto)
+                        dialog.show(requireActivity().supportFragmentManager, DetalleProductoDialog.TAG)
+                    }
+                    barcodeScannerView?.resume()
+                } else {
+                    Toast.makeText(context, "Código nuevo detectado. Abriendo gestor...", Toast.LENGTH_LONG).show()
+                    navegarAAgregarProductoConSKU(codigo)
+                }
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, "Error de red: ${e.message}", Toast.LENGTH_SHORT).show()
+                barcodeScannerView?.resume()
+            }
+    }
+
+    private fun navegarAAgregarProductoConSKU(sku: String) {
+        val fragmentoAgregar = AgregarProductoFragment().apply {
+            arguments = Bundle().apply {
+                putString("sku_enviado_escaner", sku)
+            }
+        }
+
+        activity?.supportFragmentManager?.beginTransaction()?.apply {
+            replace(R.id.content_container, fragmentoAgregar)
+            addToBackStack(null)
+            commit()
+        }
     }
 
     override fun onResume() {
         super.onResume()
         view?.postDelayed({
             if (isAdded) {
-                iniciarEscaneoSeguro()
+                verificarPermisosYEncenderCamara()
             }
         }, 250)
     }
@@ -100,6 +167,5 @@ class EscanerFragment : Fragment() {
             camaraActivada = false
         }
         isFlashOn = false
-
     }
 }

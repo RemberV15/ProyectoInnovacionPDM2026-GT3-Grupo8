@@ -55,11 +55,13 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Linterna"
             android:scaleType="fitCenter"
-            android:src="@drawable/close"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+
+            android:src="@drawable/ic_linterna_off"
+
             app:tint="@color/white"
-            tools:src="@android:drawable/ic_menu_compass" />
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/btnConfig"
@@ -115,31 +117,14 @@
             android:layout_width="match_parent"
             android:layout_height="55dp"
             android:layout_marginHorizontal="32dp"
-            android:layout_marginBottom="12dp"
+            android:layout_marginBottom="110dp"
             android:text="Confirmar Producto Escaneado"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="bold"
             app:backgroundTint="#6750A4"
             app:cornerRadius="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnEntradaManual" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnEntradaManual"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginBottom="110dp"
-            android:text="Entrada Manual"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:strokeColor="@color/white"
-            app:strokeWidth="1dp"
-            app:cornerRadius="16dp"
             app:layout_constraintBottom_toBottomOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,7 +16,6 @@ import com.google.android.material.button.MaterialButton
 
 class DetalleProductoDialog : DialogFragment() {
 
-    // Interfaz para comunicar eventos de clics de vuelta al fragmento principal si lo necesitas
     interface OnContextActionListener {
         fun onEditarSelected()
     }
@@ -27,7 +26,6 @@ class DetalleProductoDialog : DialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Hacemos transparente el fondo nativo del diálogo para lucir las esquinas redondeadas del CardView
         dialog?.window?.apply {
             setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             requestFeature(Window.FEATURE_NO_TITLE)
@@ -38,7 +36,7 @@ class DetalleProductoDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // --- 1. ENLAZAR VISTAS COMPLETAS (CONCORDANCIA ABSOLUTA CON EL XML DE 3 FILAS) ---
+        // Enlace de vistas
         val tvTituloDialog = view.findViewById<TextView>(R.id.tvTituloDialog)
         val tvDetalleNombre = view.findViewById<TextView>(R.id.tvDetalleNombre)
         val tvDetalleSKU = view.findViewById<TextView>(R.id.tvDetalleSKU)
@@ -48,38 +46,43 @@ class DetalleProductoDialog : DialogFragment() {
         val tvDetalleProveedor = view.findViewById<TextView>(R.id.tvDetalleProveedor)
         val tvDetalleCategoria = view.findViewById<TextView>(R.id.tvDetalleCategoria)
 
-        val ivProductoPreview = view.findViewById<ImageView>(R.id.ivDetalleProductoPreview)
-        val ivDetalleCodigo = view.findViewById<ImageView>(R.id.ivDetalleCodigo)
-
         val btnCerrarX = view.findViewById<ImageButton>(R.id.btnCerrarX)
         val btnEditar = view.findViewById<MaterialButton>(R.id.btnDetalleEditar)
         val btnCerrar = view.findViewById<MaterialButton>(R.id.btnDetalleCerrar)
         val btnHistorial = view.findViewById<MaterialButton>(R.id.btnDetalleHistorial)
 
-        // --- 2. ASIGNAR TEXTOS BASE DE EJEMPLO (CALCO DE TU DISEÑO OBJETIVO) ---
-        tvTituloDialog.text = "Detalles del Producto: Office Chair"
-        tvDetalleNombre.text = "Office Chair"
-        tvDetalleSKU.text = "SKU: SKU-OC-HM-001"
-        tvDetalleEstado.text = "✔ Disponible"
-        tvDetalleUbicacion.text = "Almacén C, Estante C"
-        tvDetalleCantidad.text = "25 unidades"
-        tvDetalleProveedor.text = "Herman Miller Inc."
-        tvDetalleCategoria.text = "Mobiliario"
+        // RECUPERAR DATOS ENVIADOS DESDE EL ESCÁNER
+        val nombreProd = arguments?.getString("ARG_NOMBRE") ?: "Desconocido"
+        val codigoProd = arguments?.getString("ARG_CODIGO") ?: ""
+        val ubicacionProd = arguments?.getString("ARG_UBICACION") ?: "No asignada"
+        val cantidadProd = arguments?.getInt("ARG_CANTIDAD") ?: 0
+        val categoriaProd = arguments?.getString("ARG_CATEGORIA") ?: "General"
 
-        // --- 3. GESTIÓN DE ACCIONES Y CLICS ---
+        // ASIGNACIÓN DINÁMICA DE TEXTOS REALES
+        tvTituloDialog.text = "Detalles del Producto: $nombreProd"
+        tvDetalleNombre.text = nombreProd
+        tvDetalleSKU.text = "SKU: $codigoProd"
+        tvDetalleUbicacion.text = ubicacionProd
+        tvDetalleCantidad.text = "$cantidadProd unidades"
+        tvDetalleCategoria.text = categoriaProd
+        tvDetalleProveedor.text = "Proveedor Interno"
 
-        // Clic en la 'X' superior derecha para cerrar
+        if (cantidadProd > 0) {
+            tvDetalleEstado.text = "✔ Disponible"
+            tvDetalleEstado.setTextColor(Color.parseColor("#2E7D32"))
+        } else {
+            tvDetalleEstado.text = "❌ Agotado"
+            tvDetalleEstado.setTextColor(Color.RED)
+        }
+
+        // Clicks básicos
         btnCerrarX.setOnClickListener { dismiss() }
-
-        // Clic en el botón "Cerrar Detalles" inferior
         btnCerrar.setOnClickListener { dismiss() }
 
-        // Clic en el texto flotante de "Historial de Stock"
         btnHistorial.setOnClickListener {
             Toast.makeText(requireContext(), "Abriendo Historial de Stock...", Toast.LENGTH_SHORT).show()
         }
 
-        // Clic en el botón "Editar Producto"
         btnEditar.setOnClickListener {
             Toast.makeText(requireContext(), "Abriendo editor de producto...", Toast.LENGTH_SHORT).show()
             actionListener?.onEditarSelected()
@@ -90,9 +93,18 @@ class DetalleProductoDialog : DialogFragment() {
     companion object {
         const val TAG = "DetalleProductoDialog"
 
-        // Método estático seguro para crear una nueva instancia del Diálogo
-        fun newInstance(): DetalleProductoDialog {
-            return DetalleProductoDialog()
+        // Instancia segura pasando los argumentos de Firestore de manera limpia
+        fun newInstance(producto: Producto): DetalleProductoDialog {
+            val fragment = DetalleProductoDialog()
+            val args = Bundle().apply {
+                putString("ARG_CODIGO", producto.codigo)
+                putString("ARG_NOMBRE", producto.nombre)
+                putString("ARG_CATEGORIA", producto.categoria)
+                putInt("ARG_CANTIDAD", producto.cantidad)
+                putString("ARG_UBICACION", producto.ubicacion)
+            }
+            fragment.arguments = args
+            return fragment
         }
     }
 }
