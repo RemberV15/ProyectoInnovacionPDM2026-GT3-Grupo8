@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
 import com.journeyapps.barcodescanner.BarcodeView
 
@@ -41,21 +40,12 @@ class EscanerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         barcodeScannerView = view.findViewById(R.id.barcode_scanner)
         val btnFlash = view.findViewById<ImageButton>(R.id.btnFlass)
-        val btnConfirmar = view.findViewById<MaterialButton>(R.id.btnConfirmarProducto)
 
         btnFlash.setOnClickListener {
             if (camaraActivada) {
                 isFlashOn = !isFlashOn
                 barcodeScannerView?.setTorch(isFlashOn)
                 btnFlash.setImageResource(if (isFlashOn) R.drawable.ic_linterna_on else R.drawable.ic_linterna_off)
-            }
-        }
-
-        btnConfirmar.setOnClickListener {
-            if (codigoDetectadoActual.isNotEmpty()) {
-                verificarYProcederConProducto(codigoDetectadoActual)
-            } else {
-                Toast.makeText(context, "Escanea un código primero", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -99,11 +89,6 @@ class EscanerFragment : Fragment() {
             }
     }
 
-
-    private fun navegarAAgregarProductoConSKU(sku: String) {
-        val f = AgregarProductoFragment().apply { arguments = Bundle().apply { putString("sku_enviado_escaner", sku) } }
-        parentFragmentManager.beginTransaction().replace(R.id.content_container, f).addToBackStack(null).commit()
-    }
 
     override fun onResume() { super.onResume(); verificarPermisosYEncenderCamara() }
     override fun onPause() { super.onPause(); barcodeScannerView?.pause(); camaraActivada = false }

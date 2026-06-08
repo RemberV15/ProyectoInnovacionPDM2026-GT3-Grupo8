@@ -28,8 +28,8 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
         fabCamara.setOnClickListener {
             parentFragmentManager.beginTransaction().apply {
-                replace(R.id.content_container, AgregarProductoFragment())
-                addToBackStack(null) // Permite regresar a Inicio al presionar "Atrás"
+                replace(R.id.content_container, EscanerFragment())
+                addToBackStack(null)
                 commit()
             }
         }
@@ -37,7 +37,7 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
         db.collection("productos")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
-                    Toast.makeText(context, "Error al conectar base de datos", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Error al conectar base de datos: ${error.message}", Toast.LENGTH_SHORT).show()
                     return@addSnapshotListener
                 }
 
@@ -46,7 +46,8 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                     tvContador.text = totalProductos.toString()
 
                     val listaProductosReal = snapshot.toObjects(Producto::class.java)
-                    val listaOrdenada = listaProductosReal.sortedByDescending { it.timestamp }
+
+                    val listaOrdenada = listaProductosReal.sortedByDescending { it.codigo }
 
                     recienteAdapter.actualizarLista(listaOrdenada)
                 }
