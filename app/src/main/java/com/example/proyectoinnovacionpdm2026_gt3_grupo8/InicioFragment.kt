@@ -71,5 +71,9 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                     recienteAdapter.actualizarLista(listaOrdenada)
                 }
             }
+        fabExportar.setOnClickListener {
+            val bottomSheet = ExportarBottomSheet()
+            bottomSheet.show(parentFragmentManager, "ExportarBottomSheet")
+        }
     }
 }
