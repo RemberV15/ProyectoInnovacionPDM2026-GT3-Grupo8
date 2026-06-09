@@ -22,16 +22,35 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
         val tvContador = view.findViewById<TextView>(R.id.tv_dashboard_contador)
         val fabCamara = view.findViewById<FloatingActionButton>(R.id.fab_camara)
 
+        // 1. Declaramos el nuevo botón de exportar/enviar
+        val fabExportar = view.findViewById<FloatingActionButton>(R.id.fab_exportar)
+
         recienteAdapter = RecienteAdapter(arrayListOf())
         rvRecientes.layoutManager = LinearLayoutManager(context)
         rvRecientes.adapter = recienteAdapter
 
+        // Navegación de la Cámara
         fabCamara.setOnClickListener {
             parentFragmentManager.beginTransaction().apply {
                 replace(R.id.content_container, AgregarProductoFragment())
                 addToBackStack(null)
                 commit()
             }
+        }
+
+        // 2. Agregamos la navegación del botón Exportar
+        fabExportar.setOnClickListener {
+            // Un Toast de prueba mientras creas la pantalla
+            Toast.makeText(context, "Abriendo pantalla de envío...", Toast.LENGTH_SHORT).show()
+
+            // TODO: Agregar la funcionalidad de la nuevo pop up / pantalla
+            /*
+            parentFragmentManager.beginTransaction().apply {
+                replace(R.id.content_container, TuFragmentoDeEnvio())
+                addToBackStack(null)
+                commit()
+            }
+            */
         }
 
         db.collection("productos")

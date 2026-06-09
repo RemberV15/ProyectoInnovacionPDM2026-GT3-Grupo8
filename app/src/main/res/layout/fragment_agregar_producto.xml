@@ -46,7 +46,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="0dp"
-                    app:cardBackgroundColor="@color/pastel_blue"
+                    app:cardBackgroundColor="#EBF3FE"
                     android:layout_marginBottom="16dp">
 
                     <LinearLayout
@@ -59,7 +59,7 @@
                             android:id="@+id/ivProductoPreview"
                             android:layout_width="64dp"
                             android:layout_height="64dp"
-                            android:src="@android:drawable/ic_menu_camera"
+                            android:src="@drawable/add_a_photo"
                             app:tint="@color/primary_blue"/>
 
                         <TextView
