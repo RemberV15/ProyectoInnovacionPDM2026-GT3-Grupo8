@@ -11,7 +11,7 @@ import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.graphics.drawable.toDrawable // NUEVO: Importación para solucionar la advertencia
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
