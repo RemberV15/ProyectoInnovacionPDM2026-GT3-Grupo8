@@ -1,8 +1,8 @@
 package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
+import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +11,8 @@ import android.view.Window
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.graphics.drawable.toDrawable // NUEVO: Importación para solucionar la advertencia
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
 
@@ -21,31 +23,31 @@ class DetalleProductoDialog : DialogFragment() {
     }
 
     var actionListener: OnContextActionListener? = null
-    // 1. Definimos la interfaz para el listener
 
     interface OnDismissListener {
         fun onDialogDismissed()
     }
 
-    // 2. Variable para guardar el listener
     var dismissListener: OnDismissListener? = null
 
-    // 3. Sobrescribimos onDismiss para activar el listener
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         dismissListener?.onDialogDismissed()
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.apply {
-            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            // CORRECCIÓN: Se utiliza la función de extensión KTX 'Int.toDrawable()' recomendada
+            setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             requestFeature(Window.FEATURE_NO_TITLE)
         }
         return inflater.inflate(R.layout.dialog_detalle_producto, container, false)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -69,6 +71,7 @@ class DetalleProductoDialog : DialogFragment() {
         val cantidadProd = arguments?.getInt("ARG_CANTIDAD") ?: 0
         val categoriaProd = arguments?.getString("ARG_CATEGORIA") ?: "General"
 
+        // Asignación de textos con plantillas de Kotlin
         tvTituloDialog.text = "Detalles del Producto: $nombreProd"
         tvDetalleNombre.text = nombreProd
         tvDetalleSKU.text = "SKU: $codigoProd"
@@ -78,7 +81,7 @@ class DetalleProductoDialog : DialogFragment() {
 
         if (cantidadProd > 0) {
             tvDetalleEstado.text = "✔ Disponible"
-            tvDetalleEstado.setTextColor(Color.parseColor("#2E7D32"))
+            tvDetalleEstado.setTextColor("#2E7D32".toColorInt())
         } else {
             tvDetalleEstado.text = "❌ Agotado"
             tvDetalleEstado.setTextColor(Color.RED)

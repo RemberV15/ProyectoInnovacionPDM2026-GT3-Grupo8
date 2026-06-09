@@ -28,7 +28,7 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
         fabCamara.setOnClickListener {
             parentFragmentManager.beginTransaction().apply {
-                replace(R.id.content_container, EscanerFragment())
+                replace(R.id.content_container, AgregarProductoFragment())
                 addToBackStack(null)
                 commit()
             }
