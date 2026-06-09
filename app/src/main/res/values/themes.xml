@@ -11,6 +11,8 @@
 
         <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
     </style>
-
     <style name="Theme.ProyectoInnovacionPDM2026GT3Grupo8" parent="Base.Theme.ProyectoInnovacionPDM2026GT3Grupo8" />
+    <style name="RoundedAlertDialog" parent="Theme.MaterialComponents.Light.Dialog.Alert">
+        <item name="android:windowBackground">@drawable/bg_dialog_redondeado</item>
+    </style>
 </resources>

@@ -6,13 +6,18 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class StockAdapter(private val lista: List<Producto>) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
+class StockAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nombre: TextView = view.findViewById(R.id.tv_nombre)
         val sku: TextView = view.findViewById(R.id.tv_sku)
         val cantidad: TextView = view.findViewById(R.id.tv_cantidad)
         val estante: TextView = view.findViewById(R.id.tv_estante)
+    }
+
+    fun actualizarLista(nuevaLista: List<Producto>) {
+        this.lista = nuevaLista
+        notifyDataSetChanged()
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -23,9 +28,9 @@ class StockAdapter(private val lista: List<Producto>) : RecyclerView.Adapter<Sto
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
         holder.nombre.text = item.nombre
-        holder.sku.text = "SKU: ${item.codigo}" // Corregido: .sku no existe en el modelo, es .codigo
-        holder.cantidad.text = "${item.cantidad} unidades" // Corregido: Se añade String template para castear el Int
-        holder.estante.text = item.ubicacion // Corregido: .estante no existe, es .ubicacion
+        holder.sku.text = "SKU: ${item.codigo}"
+        holder.cantidad.text = "${item.cantidad} unidades"
+        holder.estante.text = item.ubicacion
     }
 
     override fun getItemCount() = lista.size
