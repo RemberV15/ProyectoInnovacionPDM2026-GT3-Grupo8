@@ -128,12 +128,12 @@
             android:id="@+id/btnDetalleEditar"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/primary_blue"
             android:text="Editar Producto"
             android:textAllCaps="false"
             android:textStyle="bold"
-            app:cornerRadius="25dp"
-            android:layout_marginBottom="8dp"
-            android:backgroundTint="#6750A4"/>
+            app:cornerRadius="25dp" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnDetalleCerrar"
@@ -156,8 +156,8 @@
             android:layout_gravity="center_horizontal"
             android:text="Historial de Stock"
             android:textAllCaps="false"
-            android:textColor="#6750A4"
+            android:textColor="@color/primary_blue"
             app:icon="@android:drawable/ic_menu_recent_history"
-            app:iconTint="#6750A4"/>
+            app:iconTint="@color/primary_blue"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
