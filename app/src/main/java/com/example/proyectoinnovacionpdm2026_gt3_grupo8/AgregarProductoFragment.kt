@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -16,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
+import android.widget.Filter
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -27,14 +27,16 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 import java.io.ByteArrayOutputStream
-import java.util.Locale
 
 class AgregarProductoFragment : Fragment() {
 
     private var cantidadStock = 0
     private val db = FirebaseFirestore.getInstance()
     private lateinit var etDescripcionProducto: TextInputEditText
+    private lateinit var etSKU: TextInputEditText
     private lateinit var ivProductoPreview: ImageView
     private var imageBitmap: Bitmap? = null
 
@@ -62,6 +64,13 @@ class AgregarProductoFragment : Fragment() {
         }
     }
 
+    private val lanzarEscanerSKU = registerForActivityResult(ScanContract()) { result ->
+        if (result.contents != null) {
+            etSKU.setText(result.contents) // Rellena el número automáticamente con el código exacto
+            Toast.makeText(context, "Código escaneado", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_agregar_producto, container, false)
 
@@ -71,9 +80,13 @@ class AgregarProductoFragment : Fragment() {
         val cardTomarFoto = view.findViewById<MaterialCardView>(R.id.cardTomarFoto)
         ivProductoPreview = view.findViewById(R.id.ivProductoPreview)
         val etNombreProducto = view.findViewById<TextInputEditText>(R.id.etNombreProducto)
+
         etDescripcionProducto = view.findViewById(R.id.etDescripcionProducto)
         val tilDescripcion = etDescripcionProducto.parent.parent as? TextInputLayout
-        val etSKU = view.findViewById<TextInputEditText>(R.id.etSKU)
+
+        etSKU = view.findViewById(R.id.etSKU)
+        val tilSKU = view.findViewById<TextInputLayout>(R.id.tilSKU)
+
         val etUbicacion = view.findViewById<TextInputEditText>(R.id.etUbicacion)
         val autoCompleteCategoria = view.findViewById<AutoCompleteTextView>(R.id.autoCompleteCategoria)
         val btnMenosStock = view.findViewById<TextView>(R.id.btnMenosStock)
@@ -85,10 +98,34 @@ class AgregarProductoFragment : Fragment() {
         val skuRecibido = arguments?.getString("sku_enviado_escaner")
         if (!skuRecibido.isNullOrEmpty()) etSKU.setText(skuRecibido)
 
-        autoCompleteCategoria.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categoriasPreestablecidas))
+        val adapter = object : ArrayAdapter<String>(requireContext(), android.R.layout.simple_dropdown_item_1line, categoriasPreestablecidas) {
+            override fun getFilter(): Filter {
+                return object : Filter() {
+                    override fun performFiltering(constraint: CharSequence?): FilterResults {
+                        return FilterResults().apply {
+                            values = categoriasPreestablecidas
+                            count = categoriasPreestablecidas.size
+                        }
+                    }
+                    override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                        notifyDataSetChanged()
+                    }
+                }
+            }
+        }
+        autoCompleteCategoria.setAdapter(adapter)
         autoCompleteCategoria.setText(categoriasPreestablecidas[0], false)
 
         tilDescripcion?.setEndIconOnClickListener { activarDictadoPorVoz() }
+
+        tilSKU?.setEndIconOnClickListener {
+            val opciones = ScanOptions()
+            opciones.setPrompt("Apunta la cámara al código de barras del producto")
+            opciones.setBeepEnabled(true)
+            opciones.setOrientationLocked(false)
+            lanzarEscanerSKU.launch(opciones)
+        }
+
         btnMasStock.setOnClickListener { cantidadStock++; tvQuantityStock.text = cantidadStock.toString() }
         btnMenosStock.setOnClickListener { if (cantidadStock > 0) { cantidadStock--; tvQuantityStock.text = cantidadStock.toString() } }
 
@@ -101,22 +138,25 @@ class AgregarProductoFragment : Fragment() {
         btnGuardar.setOnClickListener {
             val nom = etNombreProducto.text.toString().trim()
             val des = etDescripcionProducto.text.toString().trim()
-            val cod = etSKU.text.toString().trim()
+            val cod = etSKU.text.toString().trim() // Mantenemos el código exacto
             val ub = etUbicacion.text.toString().trim()
-            val cat = autoCompleteCategoria.text.toString()
+            val cat = autoCompleteCategoria.text.toString().trim()
 
-            if (nom.isEmpty() || cod.isEmpty()) {
-                Toast.makeText(context, "Por favor rellena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
+            if (nom.isEmpty() || cod.isEmpty() || cat.isEmpty()) {
+                Toast.makeText(context, "⚠️ Por favor rellena el nombre, SKU y categoría", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
+
+            if (cod.contains("/")) {
+                Toast.makeText(context, "⚠️ El SKU no puede ser un enlace web (no debe contener '/'). Escanea un código de producto válido.", Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
 
             btnGuardar.isEnabled = false
             Toast.makeText(context, "Guardando producto...", Toast.LENGTH_SHORT).show()
 
-            // Convertimos la imagen a Base64 (Texto)
             val base64Image = imageBitmap?.let { bitmapToBase64(it) } ?: ""
 
-            // AQUÍ CONECTAMOS CON TU ESTRUCTURA ORIGINAL
             val nuevoProducto = hashMapOf(
                 "codigo" to cod,
                 "nombre" to nom,
@@ -125,7 +165,7 @@ class AgregarProductoFragment : Fragment() {
                 "cantidad" to cantidadStock,
                 "ubicacion" to ub,
                 "imagenBase64" to base64Image,
-                "timestamp" to Timestamp.now() // <--- CAMBIADO AQUÍ PARA QUE TU BASE DE DATOS VIEJA LO LEA PERFECTO
+                "timestamp" to Timestamp.now()
             )
 
             db.collection("productos").document(cod).set(nuevoProducto)
@@ -134,10 +174,16 @@ class AgregarProductoFragment : Fragment() {
                     parentFragmentManager.popBackStack()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(context, "Error BD: ${e.message}", Toast.LENGTH_LONG).show()
+                    val msjError = if (e.message?.contains("Unable to resolve host") == true) {
+                        "Sin conexión a Internet. Revisa tu red y vuelve a intentar."
+                    } else {
+                        "Error BD: ${e.message}"
+                    }
+                    Toast.makeText(context, msjError, Toast.LENGTH_LONG).show()
                     btnGuardar.isEnabled = true
                 }
         }
+
         btnCancelar.setOnClickListener { parentFragmentManager.popBackStack() }
     }
 

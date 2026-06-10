@@ -105,10 +105,13 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilSKU"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
+                    app:endIconMode="custom"
+                    app:endIconDrawable="@drawable/barcode_scanner"
                     app:boxBackgroundColor="#F8F6FF"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="0dp"

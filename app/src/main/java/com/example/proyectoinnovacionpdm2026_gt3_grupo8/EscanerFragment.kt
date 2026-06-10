@@ -54,16 +54,20 @@ class EscanerFragment : Fragment() {
         if (camaraActivada) return
         barcodeScannerView?.decodeContinuous { result ->
             result.text?.let { codigo ->
-                codigoDetectadoActual = codigo
-                barcodeScannerView?.pause()
-                requireActivity().runOnUiThread { verificarYProcederConProducto(codigo) }
+                // Evitamos que lea repetidas veces mientras ya está procesando
+                if (codigo != codigoDetectadoActual) {
+                    codigoDetectadoActual = codigo
+                    barcodeScannerView?.pause()
+                    requireActivity().runOnUiThread { verificarYProcederConProducto(codigo) }
+                }
             }
         }
         barcodeScannerView?.resume()
         camaraActivada = true
     }
+
     private fun verificarYProcederConProducto(codigo: String) {
-        // Apagamos sensores
+        // Apagamos sensores al mostrar el resultado
         if (isFlashOn) {
             barcodeScannerView?.setTorch(false)
             isFlashOn = false
@@ -76,22 +80,43 @@ class EscanerFragment : Fragment() {
                     val producto = document.toObject(Producto::class.java)
                     if (producto != null) {
                         val dialog = DetalleProductoDialog.newInstance(producto)
+
+                        dialog.dismissListener = object : DetalleProductoDialog.OnDismissListener {
+                            override fun onDialogDismissed() {
+                                codigoDetectadoActual = ""
+                                barcodeScannerView?.resume()
+                            }
+                        }
+
                         dialog.show(parentFragmentManager, DetalleProductoDialog.TAG)
                     }
                 } else {
                     Toast.makeText(context, "Producto no encontrado", Toast.LENGTH_SHORT).show()
+                    codigoDetectadoActual = ""
                     barcodeScannerView?.resume()
                 }
             }
             .addOnFailureListener { e ->
                 Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                codigoDetectadoActual = ""
                 barcodeScannerView?.resume()
             }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Le damos un pequeño respiro a la pantalla para evitar congelamientos
+        view?.postDelayed({
+            if (isAdded) verificarPermisosYEncenderCamara()
+        }, 250)
+    }
 
-    override fun onResume() { super.onResume(); verificarPermisosYEncenderCamara() }
-    override fun onPause() { super.onPause(); barcodeScannerView?.pause(); camaraActivada = false }
+    override fun onPause() {
+        super.onPause()
+        barcodeScannerView?.pause()
+        camaraActivada = false
+        codigoDetectadoActual = ""
+    }
 
     private fun verificarPermisosYEncenderCamara() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
