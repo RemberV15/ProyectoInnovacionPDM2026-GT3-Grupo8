@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
@@ -22,11 +23,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
+import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import java.io.ByteArrayOutputStream
+import java.util.Locale
 
 class AgregarProductoFragment : Fragment() {
 
@@ -36,7 +38,9 @@ class AgregarProductoFragment : Fragment() {
     private lateinit var ivProductoPreview: ImageView
     private var imageBitmap: Bitmap? = null
 
-    private val categoriasPreestablecidas = arrayOf("Mobiliario", "Electrónicos", "Papelería", "Herramientas", "Limpieza")
+    private val categoriasPreestablecidas = arrayOf(
+        "Mobiliario", "Electrónicos", "Papelería", "Herramientas", "Limpieza"
+    )
 
     private val lanzarSpeechToText = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { res ->
         if (res.resultCode == Activity.RESULT_OK && res.data != null) {
@@ -76,8 +80,13 @@ class AgregarProductoFragment : Fragment() {
         val btnMasStock = view.findViewById<TextView>(R.id.btnMasStock)
         val tvQuantityStock = view.findViewById<TextView>(R.id.tvCantidadStock)
         val btnGuardar = view.findViewById<MaterialButton>(R.id.btnGuardarProducto)
+        val btnCancelar = view.findViewById<MaterialButton>(R.id.btnCancelar)
+
+        val skuRecibido = arguments?.getString("sku_enviado_escaner")
+        if (!skuRecibido.isNullOrEmpty()) etSKU.setText(skuRecibido)
 
         autoCompleteCategoria.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, categoriasPreestablecidas))
+        autoCompleteCategoria.setText(categoriasPreestablecidas[0], false)
 
         tilDescripcion?.setEndIconOnClickListener { activarDictadoPorVoz() }
         btnMasStock.setOnClickListener { cantidadStock++; tvQuantityStock.text = cantidadStock.toString() }
@@ -91,22 +100,23 @@ class AgregarProductoFragment : Fragment() {
 
         btnGuardar.setOnClickListener {
             val nom = etNombreProducto.text.toString().trim()
-            val cod = etSKU.text.toString().trim()
             val des = etDescripcionProducto.text.toString().trim()
+            val cod = etSKU.text.toString().trim()
             val ub = etUbicacion.text.toString().trim()
             val cat = autoCompleteCategoria.text.toString()
 
             if (nom.isEmpty() || cod.isEmpty()) {
-                Toast.makeText(context, "Faltan campos obligatorios", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Por favor rellena todos los campos obligatorios", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
             btnGuardar.isEnabled = false
             Toast.makeText(context, "Guardando producto...", Toast.LENGTH_SHORT).show()
 
-            // Convertimos imagen a Base64 (Texto) directamente aquí
+            // Convertimos la imagen a Base64 (Texto)
             val base64Image = imageBitmap?.let { bitmapToBase64(it) } ?: ""
 
+            // AQUÍ CONECTAMOS CON TU ESTRUCTURA ORIGINAL
             val nuevoProducto = hashMapOf(
                 "codigo" to cod,
                 "nombre" to nom,
@@ -114,8 +124,8 @@ class AgregarProductoFragment : Fragment() {
                 "categoria" to cat,
                 "cantidad" to cantidadStock,
                 "ubicacion" to ub,
-                "imagenBase64" to base64Image, // Guardamos la foto como texto gigante
-                "fecha" to Timestamp.now()
+                "imagenBase64" to base64Image,
+                "timestamp" to Timestamp.now() // <--- CAMBIADO AQUÍ PARA QUE TU BASE DE DATOS VIEJA LO LEA PERFECTO
             )
 
             db.collection("productos").document(cod).set(nuevoProducto)
@@ -124,15 +134,16 @@ class AgregarProductoFragment : Fragment() {
                     parentFragmentManager.popBackStack()
                 }
                 .addOnFailureListener { e ->
-                    Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Error BD: ${e.message}", Toast.LENGTH_LONG).show()
                     btnGuardar.isEnabled = true
                 }
         }
+        btnCancelar.setOnClickListener { parentFragmentManager.popBackStack() }
     }
 
     private fun bitmapToBase64(bitmap: Bitmap): String {
         val outputStream = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, outputStream) // Comprimido para Firestore
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 30, outputStream)
         return Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT)
     }
 
@@ -140,4 +151,4 @@ class AgregarProductoFragment : Fragment() {
         try { lanzarSpeechToText.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)) }
         catch (e: Exception) { Toast.makeText(context, "No disponible", Toast.LENGTH_SHORT).show() }
     }
-}
+}gi

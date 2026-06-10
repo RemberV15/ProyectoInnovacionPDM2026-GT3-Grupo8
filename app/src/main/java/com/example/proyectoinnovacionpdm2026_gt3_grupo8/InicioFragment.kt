@@ -66,11 +66,16 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
                     val listaProductosReal = snapshot.toObjects(Producto::class.java)
 
-                    val listaOrdenada = listaProductosReal.sortedByDescending { it.codigo }
+                    // MODIFICACIÓN CLAVE: Usamos tu variable 'timestamp'.
+                    // Lo convertimos a Date y sacamos el tiempo. Si es nulo, usa 0L (lo manda al fondo).
+                    val listaOrdenada = listaProductosReal
+                        .sortedByDescending { it.timestamp?.toDate()?.time ?: 0L }
+                        .take(5)
 
                     recienteAdapter.actualizarLista(listaOrdenada)
                 }
             }
+
         fabExportar.setOnClickListener {
             val bottomSheet = ExportarBottomSheet()
             bottomSheet.show(parentFragmentManager, "ExportarBottomSheet")
