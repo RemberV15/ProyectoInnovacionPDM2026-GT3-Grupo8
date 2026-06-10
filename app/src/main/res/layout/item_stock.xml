@@ -1,43 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
+    android:layout_marginHorizontal="16dp"
     android:layout_marginVertical="6dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0dp"
-    app:cardBackgroundColor="#F2F2F2"> <LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="16dp"
-    android:orientation="horizontal"
-    android:gravity="center_vertical">
-
-    <ImageView
-        android:id="@+id/iv_producto"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="#DDDDDD"
-        android:scaleType="centerCrop" />
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp"
+    app:cardBackgroundColor="#FFFFFF"
+    android:foreground="?attr/selectableItemBackground">
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:layout_marginStart="12dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="16dp">
 
-        <TextView android:id="@+id/tv_nombre" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Producto" android:textStyle="bold" android:textColor="#000000"/>
-        <TextView android:id="@+id/tv_sku" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="SKU: 00000" android:textSize="12sp"/>
-        <TextView
-            android:id="@+id/tv_cantidad"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cantidad"
-            android:textSize="12sp" />
-    </LinearLayout>
+            android:layout_marginBottom="4dp">
 
-    <TextView android:id="@+id/tv_estante" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Estante A1" android:textStyle="bold" android:textColor="#555555"/>
-</LinearLayout>
+            <TextView
+                android:id="@+id/tv_nombre"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@id/tv_cantidad"
+                android:layout_marginEnd="8dp"
+                android:text="Nombre del Producto"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:ellipsize="end"
+                android:maxLines="1" />
+
+            <TextView
+                android:id="@+id/tv_cantidad"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:text="0 unidades"
+                android:textColor="#49454F"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_sku"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="SKU: ----"
+                android:textColor="#666666"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:layout_marginEnd="4dp"
+                    android:src="@android:drawable/ic_dialog_map"
+                    app:tint="#050FA3" />
+
+                <TextView
+                    android:id="@+id/tv_estante"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Estante --"
+                    android:textColor="#050FA3"
+                    android:textSize="14sp"
+                    android:textStyle="normal" />
+            </LinearLayout>
+        </RelativeLayout>
+
+    </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

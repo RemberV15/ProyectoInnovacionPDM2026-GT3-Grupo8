@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.drawable.toDrawable
@@ -40,11 +41,22 @@ class DetalleProductoDialog : DialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         dialog?.window?.apply {
-            // CORRECCIÓN: Se utiliza la función de extensión KTX 'Int.toDrawable()' recomendada
             setBackgroundDrawable(Color.TRANSPARENT.toDrawable())
             requestFeature(Window.FEATURE_NO_TITLE)
         }
         return inflater.inflate(R.layout.dialog_detalle_producto, container, false)
+    }
+
+    /**
+     * CORRECCIÓN CLAVE: Fuerza al cuadro de diálogo a expandirse horizontalmente
+     * al 85% del ancho real de la pantalla de tu dispositivo.
+     */
+    override fun onStart() {
+        super.onStart()
+        dialog?.window?.let { window ->
+            val width = (resources.displayMetrics.widthPixels * 0.85).toInt()
+            window.setLayout(width, ViewGroup.LayoutParams.WRAP_CONTENT)
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -59,6 +71,9 @@ class DetalleProductoDialog : DialogFragment() {
         val tvDetalleUbicacion = view.findViewById<TextView>(R.id.tvDetalleUbicacion)
         val tvDetalleCantidad = view.findViewById<TextView>(R.id.tvDetalleCantidad)
         val tvDetalleCategoria = view.findViewById<TextView>(R.id.tvDetalleCategoria)
+
+        // AGREGADO: Enlace del componente del código de barras recuperado del XML
+        val ivDetalleCodigo = view.findViewById<ImageView>(R.id.ivDetalleCodigo)
 
         val btnCerrarX = view.findViewById<ImageButton>(R.id.btnCerrarX)
         val btnEditar = view.findViewById<MaterialButton>(R.id.btnDetalleEditar)
@@ -78,6 +93,9 @@ class DetalleProductoDialog : DialogFragment() {
         tvDetalleUbicacion.text = ubicacionProd
         tvDetalleCantidad.text = "$cantidadProd unidades"
         tvDetalleCategoria.text = categoriaProd
+
+        // NOTA: Aquí puedes usar librerías como ZXing o Glide si requieres pintar un código
+        // QR/Barras dinámico en el 'ivDetalleCodigo' usando la variable 'codigoProd'.
 
         if (cantidadProd > 0) {
             tvDetalleEstado.text = "✔ Disponible"

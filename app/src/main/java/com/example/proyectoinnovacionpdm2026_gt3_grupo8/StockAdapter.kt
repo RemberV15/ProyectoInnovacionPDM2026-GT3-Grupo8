@@ -6,7 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class StockAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
+class StockAdapter(
+    private var lista: List<Producto>,
+    private val onItemClick: (Producto) -> Unit // Escuchador del clic
+) : RecyclerView.Adapter<StockAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nombre: TextView = view.findViewById(R.id.tv_nombre)
@@ -31,6 +34,11 @@ class StockAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<Sto
         holder.sku.text = "SKU: ${item.codigo}"
         holder.cantidad.text = "${item.cantidad} unidades"
         holder.estante.text = item.ubicacion
+
+        // Configuración del clic en la celda completa
+        holder.itemView.setOnClickListener {
+            onItemClick(item)
+        }
     }
 
     override fun getItemCount() = lista.size

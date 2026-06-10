@@ -25,7 +25,12 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         super.onViewCreated(view, savedInstanceState)
 
         val rvStock = view.findViewById<RecyclerView>(R.id.rv_stock)
-        stockAdapter = StockAdapter(emptyList())
+
+        // SOLUCCIÓN AL ERROR: Inicialización correcta pasando la lambda del clic
+        stockAdapter = StockAdapter(emptyList()) { productoSeleccionado ->
+            mostrarDetalleProducto(productoSeleccionado)
+        }
+
         rvStock.layoutManager = LinearLayoutManager(context)
         rvStock.adapter = stockAdapter
 
@@ -41,13 +46,20 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         }
     }
 
+    /**
+     * Muestra el diálogo flotante con el detalle del producto seleccionado
+     */
+    private fun mostrarDetalleProducto(producto: Producto) {
+        val dialog = DetalleProductoDialog.newInstance(producto)
+        dialog.show(parentFragmentManager, DetalleProductoDialog.TAG)
+    }
+
     private fun mostrarPopupFiltros() {
         val dialogView = layoutInflater.inflate(R.layout.dialog_filtros, null)
         val dialog = AlertDialog.Builder(requireContext())
             .setView(dialogView)
             .create()
 
-        // Fondo transparente para aplicar la esquina redondeada del XML
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val btnCat = dialogView.findViewById<Button>(R.id.btn_cat)
@@ -69,7 +81,7 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         }
 
         btnEst.setOnClickListener {
-
+            // Espacio para implementar filtro de estante si se requiere
         }
 
         dialog.show()
@@ -85,11 +97,14 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView.setTextColor(Color.parseColor("#050FA3"))
-                textView.setTypeface(null, Typeface.BOLD)
+
+                // CORRECCIÓN: Agregamos el signo '?' después de textView para evitar el error de nulos
+                textView?.setTextColor(Color.parseColor("#050FA3"))
+                textView?.setTypeface(null, Typeface.BOLD)
+
                 return view
             }
-        }
+        } // Aquí se cierra correctamente el objeto adapter
 
         val tituloView = TextView(requireContext()).apply {
             text = "Seleccionar $titulo"
