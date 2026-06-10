@@ -151,4 +151,4 @@ class AgregarProductoFragment : Fragment() {
         try { lanzarSpeechToText.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)) }
         catch (e: Exception) { Toast.makeText(context, "No disponible", Toast.LENGTH_SHORT).show() }
     }
-}gi
+}
