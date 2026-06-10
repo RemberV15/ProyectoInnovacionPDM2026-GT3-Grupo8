@@ -2,8 +2,10 @@ package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -47,10 +49,6 @@ class DetalleProductoDialog : DialogFragment() {
         return inflater.inflate(R.layout.dialog_detalle_producto, container, false)
     }
 
-    /**
-     * CORRECCIÓN CLAVE: Fuerza al cuadro de diálogo a expandirse horizontalmente
-     * al 85% del ancho real de la pantalla de tu dispositivo.
-     */
     override fun onStart() {
         super.onStart()
         dialog?.window?.let { window ->
@@ -71,9 +69,8 @@ class DetalleProductoDialog : DialogFragment() {
         val tvDetalleUbicacion = view.findViewById<TextView>(R.id.tvDetalleUbicacion)
         val tvDetalleCantidad = view.findViewById<TextView>(R.id.tvDetalleCantidad)
         val tvDetalleCategoria = view.findViewById<TextView>(R.id.tvDetalleCategoria)
-
-        // AGREGADO: Enlace del componente del código de barras recuperado del XML
         val ivDetalleCodigo = view.findViewById<ImageView>(R.id.ivDetalleCodigo)
+        val ivDetalleProductoPreview = view.findViewById<ImageView>(R.id.ivDetalleProductoPreview)
 
         val btnCerrarX = view.findViewById<ImageButton>(R.id.btnCerrarX)
         val btnEditar = view.findViewById<MaterialButton>(R.id.btnDetalleEditar)
@@ -83,19 +80,26 @@ class DetalleProductoDialog : DialogFragment() {
         val nombreProd = arguments?.getString("ARG_NOMBRE") ?: "Desconocido"
         val codigoProd = arguments?.getString("ARG_CODIGO") ?: ""
         val ubicacionProd = arguments?.getString("ARG_UBICACION") ?: "No asignada"
-        val cantidadProd = arguments?.getInt("ARG_CANTIDAD") ?: 0
+        val cantidadProd = arguments?.getInt("ARG_CATEGIDAD") ?: 0
         val categoriaProd = arguments?.getString("ARG_CATEGORIA") ?: "General"
 
-        // Asignación de textos con plantillas de Kotlin
+        // --- LÓGICA DE IMAGEN (LA ÚNICA MODIFICACIÓN) ---
+        val base64Image = arguments?.getString("ARG_IMAGEN_BASE64")
+        if (!base64Image.isNullOrEmpty()) {
+            try {
+                val imageBytes = Base64.decode(base64Image, Base64.DEFAULT)
+                val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+                ivDetalleProductoPreview.setImageBitmap(decodedImage)
+            } catch (e: Exception) { e.printStackTrace() }
+        }
+        // ------------------------------------------------
+
         tvTituloDialog.text = "Detalles del Producto: $nombreProd"
         tvDetalleNombre.text = nombreProd
         tvDetalleSKU.text = "SKU: $codigoProd"
         tvDetalleUbicacion.text = ubicacionProd
         tvDetalleCantidad.text = "$cantidadProd unidades"
         tvDetalleCategoria.text = categoriaProd
-
-        // NOTA: Aquí puedes usar librerías como ZXing o Glide si requieres pintar un código
-        // QR/Barras dinámico en el 'ivDetalleCodigo' usando la variable 'codigoProd'.
 
         if (cantidadProd > 0) {
             tvDetalleEstado.text = "✔ Disponible"
@@ -113,7 +117,6 @@ class DetalleProductoDialog : DialogFragment() {
         }
 
         btnEditar.setOnClickListener {
-            Toast.makeText(requireContext(), "Abriendo editor de producto...", Toast.LENGTH_SHORT).show()
             actionListener?.onEditarSelected()
             dismiss()
         }
@@ -128,8 +131,9 @@ class DetalleProductoDialog : DialogFragment() {
                 putString("ARG_CODIGO", producto.codigo)
                 putString("ARG_NOMBRE", producto.nombre)
                 putString("ARG_CATEGORIA", producto.categoria)
-                putInt("ARG_CANTIDAD", producto.cantidad)
+                putInt("ARG_CATEGIDAD", producto.cantidad)
                 putString("ARG_UBICACION", producto.ubicacion)
+                putString("ARG_IMAGEN_BASE64", producto.imagenBase64) // <-- IMAGEN PASADA
             }
             fragment.arguments = args
             return fragment

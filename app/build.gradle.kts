@@ -60,6 +60,7 @@ dependencies {
     // Inyección oficial del SDK de Firebase y Firestore [cite: 13]
     implementation(platform("com.google.firebase:firebase-bom:33.1.0"))
     implementation("com.google.firebase:firebase-firestore")
+    implementation("com.google.firebase:firebase-storage")// Sirve para SUBIR y GUARDAR el archivo físico.
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -28,8 +28,6 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-
-
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -42,34 +40,21 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardTomarFoto"
                     android:layout_width="match_parent"
-                    android:layout_height="160dp"
+                    android:layout_height="wrap_content"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="0dp"
                     app:cardBackgroundColor="#EBF3FE"
                     android:layout_marginBottom="16dp">
 
-                    <LinearLayout
+                    <ImageView
+                        android:id="@+id/ivProductoPreview"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="center"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            android:id="@+id/ivProductoPreview"
-                            android:layout_width="64dp"
-                            android:layout_height="64dp"
-                            android:src="@drawable/add_a_photo"
-                            app:tint="@color/primary_blue"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Capturar Imagen del Producto"
-                            android:textColor="#49454F"
-                            android:textSize="14sp"
-                            android:layout_marginTop="8dp"/>
-                    </LinearLayout>
+                        android:layout_height="250dp"
+                        android:padding="8dp"
+                        android:scaleType="fitCenter"
+                        android:adjustViewBounds="true"
+                        android:src="@drawable/add_a_photo" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.textfield.TextInputLayout

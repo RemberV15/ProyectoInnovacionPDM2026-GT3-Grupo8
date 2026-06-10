@@ -9,6 +9,6 @@ data class Producto(
     val categoria: String = "",
     val cantidad: Int = 0,
     val ubicacion: String = "",
-    val imagen_url: String = "",
+    val imagenBase64: String = "", //imagen en texto
     val timestamp: Timestamp? = null
 )
