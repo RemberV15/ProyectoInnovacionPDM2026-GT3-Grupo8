@@ -54,7 +54,6 @@ class EscanerFragment : Fragment() {
         if (camaraActivada) return
         barcodeScannerView?.decodeContinuous { result ->
             result.text?.let { codigo ->
-                // Evitamos que lea repetidas veces mientras ya está procesando
                 if (codigo != codigoDetectadoActual) {
                     codigoDetectadoActual = codigo
                     barcodeScannerView?.pause()
@@ -67,7 +66,6 @@ class EscanerFragment : Fragment() {
     }
 
     private fun verificarYProcederConProducto(codigo: String) {
-        // Apagamos sensores al mostrar el resultado
         if (isFlashOn) {
             barcodeScannerView?.setTorch(false)
             isFlashOn = false
@@ -80,6 +78,20 @@ class EscanerFragment : Fragment() {
                     val producto = document.toObject(Producto::class.java)
                     if (producto != null) {
                         val dialog = DetalleProductoDialog.newInstance(producto)
+
+                        dialog.actionListener = object : DetalleProductoDialog.OnContextActionListener {
+                            override fun onEditarSelected(codigoProducto: String) {
+                                val fragmentoEdicion = AgregarProductoFragment()
+                                val argumentos = Bundle()
+                                argumentos.putString("ARG_CODIGO_EDITAR", codigoProducto)
+                                fragmentoEdicion.arguments = argumentos
+
+                                parentFragmentManager.beginTransaction()
+                                    .replace(R.id.content_container, fragmentoEdicion)
+                                    .addToBackStack(null)
+                                    .commit()
+                            }
+                        }
 
                         dialog.dismissListener = object : DetalleProductoDialog.OnDismissListener {
                             override fun onDialogDismissed() {
@@ -105,7 +117,6 @@ class EscanerFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        // Le damos un pequeño respiro a la pantalla para evitar congelamientos
         view?.postDelayed({
             if (isAdded) verificarPermisosYEncenderCamara()
         }, 250)

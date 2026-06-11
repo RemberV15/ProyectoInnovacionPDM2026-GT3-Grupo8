@@ -29,9 +29,10 @@
                 android:padding="24dp">
 
                 <TextView
+                    android:id="@+id/tvTituloFormulario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Gestor de Inventario\nInteligente"
+                    android:text="@string/titulo_gestor"
                     android:textSize="24sp"
                     android:textStyle="bold"
                     android:textColor="#000000"
@@ -54,6 +55,7 @@
                         android:padding="8dp"
                         android:scaleType="fitCenter"
                         android:adjustViewBounds="true"
+                        android:contentDescription="@string/desc_imagen_producto"
                         android:src="@drawable/add_a_photo" />
                 </com.google.android.material.card.MaterialCardView>
 
@@ -75,7 +77,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="16dp"
-                        android:hint="Nombre del Producto" />
+                        android:hint="@string/hint_nombre" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -101,7 +103,7 @@
                         android:inputType="textMultiLine"
                         android:lines="3"
                         android:paddingVertical="16dp"
-                        android:hint="Descripción del Producto (Usa el micrófono)" />
+                        android:hint="@string/hint_descripcion" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -125,7 +127,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:paddingVertical="16dp"
-                        android:hint="SKU / Código de Barras" />
+                        android:hint="@string/hint_sku" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -147,7 +149,28 @@
                         android:layout_height="wrap_content"
                         android:inputType="none"
                         android:paddingVertical="16dp"
-                        android:hint="Categoría del Producto" />
+                        android:hint="@string/hint_categoria" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:boxBackgroundColor="#F8F6FF"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
+                    app:boxCornerRadiusTopStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusBottomEnd="16dp">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etProveedor"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:paddingVertical="16dp"
+                        android:hint="@string/hint_proveedor" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <LinearLayout
@@ -180,14 +203,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:textSize="12sp"
-                                android:text="Cantidad"
+                                android:text="@string/label_cantidad"
                                 android:textColor="#666666"/>
 
                             <TextView
                                 android:id="@+id/btnMenosStock"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="-"
+                                android:text="@string/btn_menos"
                                 android:textSize="20sp"
                                 android:paddingHorizontal="8dp"
                                 android:textStyle="bold"/>
@@ -196,7 +219,7 @@
                                 android:id="@+id/tvCantidadStock"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/val_cero"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
                                 android:paddingHorizontal="4dp"/>
@@ -205,7 +228,7 @@
                                 android:id="@+id/btnMasStock"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="+"
+                                android:text="@string/btn_mas"
                                 android:textSize="20sp"
                                 android:paddingHorizontal="8dp"
                                 android:textStyle="bold"/>
@@ -231,7 +254,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:paddingVertical="16dp"
-                            android:hint="Ubicación" />
+                            android:hint="@string/hint_ubicacion" />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 
@@ -244,7 +267,7 @@
                         android:id="@+id/btnGuardarProducto"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:text="Guardar Producto ✓"
+                        android:text="@string/btn_guardar"
                         android:textAllCaps="false"
                         app:cornerRadius="50dp"
                         android:layout_marginBottom="12dp"
@@ -255,7 +278,7 @@
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                         android:layout_width="match_parent"
                         android:layout_height="60dp"
-                        android:text="Cancelar"
+                        android:text="@string/btn_cancelar"
                         android:textAllCaps="false"
                         android:textColor="#666666"
                         app:strokeColor="#DDDDDD"

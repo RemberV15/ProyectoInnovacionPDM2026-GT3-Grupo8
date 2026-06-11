@@ -22,7 +22,7 @@ import com.google.android.material.button.MaterialButton
 class DetalleProductoDialog : DialogFragment() {
 
     interface OnContextActionListener {
-        fun onEditarSelected()
+        fun onEditarSelected(codigoProducto: String) // Exigimos enviar el código
     }
 
     var actionListener: OnContextActionListener? = null
@@ -61,7 +61,6 @@ class DetalleProductoDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Enlace de vistas
         val tvTituloDialog = view.findViewById<TextView>(R.id.tvTituloDialog)
         val tvDetalleNombre = view.findViewById<TextView>(R.id.tvDetalleNombre)
         val tvDetalleSKU = view.findViewById<TextView>(R.id.tvDetalleSKU)
@@ -69,7 +68,7 @@ class DetalleProductoDialog : DialogFragment() {
         val tvDetalleUbicacion = view.findViewById<TextView>(R.id.tvDetalleUbicacion)
         val tvDetalleCantidad = view.findViewById<TextView>(R.id.tvDetalleCantidad)
         val tvDetalleCategoria = view.findViewById<TextView>(R.id.tvDetalleCategoria)
-        val ivDetalleCodigo = view.findViewById<ImageView>(R.id.ivDetalleCodigo)
+        val tvDetalleProveedor = view.findViewById<TextView>(R.id.tvDetalleProveedor)
         val ivDetalleProductoPreview = view.findViewById<ImageView>(R.id.ivDetalleProductoPreview)
 
         val btnCerrarX = view.findViewById<ImageButton>(R.id.btnCerrarX)
@@ -82,8 +81,8 @@ class DetalleProductoDialog : DialogFragment() {
         val ubicacionProd = arguments?.getString("ARG_UBICACION") ?: "No asignada"
         val cantidadProd = arguments?.getInt("ARG_CATEGIDAD") ?: 0
         val categoriaProd = arguments?.getString("ARG_CATEGORIA") ?: "General"
+        val proveedorProd = arguments?.getString("ARG_PROVEEDOR") ?: "No registrado"
 
-        // --- LÓGICA DE IMAGEN (LA ÚNICA MODIFICACIÓN) ---
         val base64Image = arguments?.getString("ARG_IMAGEN_BASE64")
         if (!base64Image.isNullOrEmpty()) {
             try {
@@ -92,20 +91,20 @@ class DetalleProductoDialog : DialogFragment() {
                 ivDetalleProductoPreview.setImageBitmap(decodedImage)
             } catch (e: Exception) { e.printStackTrace() }
         }
-        // ------------------------------------------------
 
-        tvTituloDialog.text = "Detalles del Producto: $nombreProd"
+        tvTituloDialog.text = "Detalles del Producto"
         tvDetalleNombre.text = nombreProd
         tvDetalleSKU.text = "SKU: $codigoProd"
         tvDetalleUbicacion.text = ubicacionProd
         tvDetalleCantidad.text = "$cantidadProd unidades"
         tvDetalleCategoria.text = categoriaProd
+        tvDetalleProveedor.text = proveedorProd
 
         if (cantidadProd > 0) {
-            tvDetalleEstado.text = "✔ Disponible"
+            tvDetalleEstado.text = "Disponible"
             tvDetalleEstado.setTextColor("#2E7D32".toColorInt())
         } else {
-            tvDetalleEstado.text = "❌ Agotado"
+            tvDetalleEstado.text = "Agotado"
             tvDetalleEstado.setTextColor(Color.RED)
         }
 
@@ -113,11 +112,11 @@ class DetalleProductoDialog : DialogFragment() {
         btnCerrar.setOnClickListener { dismiss() }
 
         btnHistorial.setOnClickListener {
-            Toast.makeText(requireContext(), "Abriendo Historial de Stock...", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Abriendo Historial...", Toast.LENGTH_SHORT).show()
         }
 
         btnEditar.setOnClickListener {
-            actionListener?.onEditarSelected()
+            actionListener?.onEditarSelected(codigoProd)
             dismiss()
         }
     }
@@ -133,7 +132,8 @@ class DetalleProductoDialog : DialogFragment() {
                 putString("ARG_CATEGORIA", producto.categoria)
                 putInt("ARG_CATEGIDAD", producto.cantidad)
                 putString("ARG_UBICACION", producto.ubicacion)
-                putString("ARG_IMAGEN_BASE64", producto.imagenBase64) // <-- IMAGEN PASADA
+                putString("ARG_PROVEEDOR", producto.proveedor)
+                putString("ARG_IMAGEN_BASE64", producto.imagenBase64)
             }
             fragment.arguments = args
             return fragment

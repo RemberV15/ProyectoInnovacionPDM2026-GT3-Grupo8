@@ -1,12 +1,15 @@
 package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
+import android.annotation.SuppressLint
 import android.graphics.BitmapFactory
+import android.os.Bundle
 import android.util.Base64
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 
 class RecienteAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<RecienteAdapter.ViewHolder>() {
@@ -15,7 +18,6 @@ class RecienteAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<
         val ivProducto: ImageView = view.findViewById(R.id.iv_producto_reciente)
         val tvNombre: TextView = view.findViewById(R.id.tv_nombre_reciente)
         val tvDetalles: TextView = view.findViewById(R.id.tv_detalles_reciente)
-        val ivEscanear: ImageView = view.findViewById(R.id.iv_escanear_reciente)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -27,27 +29,48 @@ class RecienteAdapter(private var lista: List<Producto>) : RecyclerView.Adapter<
         val item = lista[position]
 
         holder.tvNombre.text = item.nombre
-        holder.tvDetalles.text = "Categoría: ${item.categoria}\nSKU: ${item.codigo}"
+        holder.tvDetalles.text = holder.itemView.context.getString(R.string.detalle_format, item.categoria, item.codigo)
 
-        // MODIFICACIÓN CLAVE: Recupera el String Base64, lo convierte a bytes, luego a Bitmap y lo setea al ImageView
-        if (!item.imagenBase64.isNullOrEmpty()) {
+        if (item.imagenBase64.isNotEmpty()) {
             try {
                 val imageBytes = Base64.decode(item.imagenBase64, Base64.DEFAULT)
                 val decodedImage = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
                 holder.ivProducto.setImageBitmap(decodedImage)
-            } catch (e: Exception) {
-                e.printStackTrace()
-                // Si ocurre un error de decodificación, puedes limpiar o dejar un fondo por defecto
+            } catch (_: Exception) {
                 holder.ivProducto.setImageBitmap(null)
             }
         } else {
-            // Si el producto no tiene imagen asignada
             holder.ivProducto.setImageBitmap(null)
+        }
+
+        holder.itemView.setOnClickListener { view ->
+            val contexto = view.context
+
+            if (contexto is AppCompatActivity) {
+                val dialog = DetalleProductoDialog.newInstance(item)
+
+                dialog.actionListener = object : DetalleProductoDialog.OnContextActionListener {
+                    override fun onEditarSelected(codigoProducto: String) {
+                        val fragmentoEdicion = AgregarProductoFragment()
+                        val args = Bundle()
+                        args.putString("ARG_CODIGO_EDITAR", codigoProducto)
+                        fragmentoEdicion.arguments = args
+
+                        contexto.supportFragmentManager.beginTransaction()
+                            .replace(R.id.content_container, fragmentoEdicion)
+                            .addToBackStack(null)
+                            .commit()
+                    }
+                }
+
+                dialog.show(contexto.supportFragmentManager, DetalleProductoDialog.TAG)
+            }
         }
     }
 
     override fun getItemCount() = lista.size
 
+    @SuppressLint("NotifyDataSetChanged")
     fun actualizarLista(nuevaLista: List<Producto>) {
         this.lista = nuevaLista
         notifyDataSetChanged()

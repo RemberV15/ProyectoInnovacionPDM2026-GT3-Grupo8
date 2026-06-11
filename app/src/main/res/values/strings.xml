@@ -1,5 +1,22 @@
 <resources>
     <string name="app_name">Centinela</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="titulo_gestor">Gestor de Inventario\nInteligente</string>
+    <string name="titulo_editar_producto">Editar Producto</string>
+    <string name="hint_nombre">Nombre del Producto</string>
+    <string name="hint_descripcion">Descripción del Producto (Usa el micrófono)</string>
+    <string name="hint_sku">SKU / Código de Barras</string>
+    <string name="hint_categoria">Categoría del Producto</string>
+    <string name="hint_proveedor">Proveedor</string>
+    <string name="label_cantidad">Cantidad</string>
+    <string name="hint_ubicacion">Ubicación</string>
+    <string name="btn_guardar">Guardar Producto ✓</string>
+    <string name="btn_actualizar">Actualizar Producto ✓</string>
+    <string name="btn_cancelar">Cancelar</string>
+    <string name="btn_menos">-</string>
+    <string name="btn_mas">+</string>
+    <string name="val_cero">0</string>
+    <string name="detalle_format">Categoría: %1$s\nSKU: %2$s</string>
+    <string name="msg_actualizando">Actualizando producto…</string>
+    <string name="msg_guardando">Guardando producto…</string>
+    <string name="desc_imagen_producto">Vista previa del producto</string>
 </resources>
