@@ -56,4 +56,16 @@
             android:textAllCaps="false"
             android:textSize="11sp"/>
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btn_limpiar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:text="Limpiar filtros"
+        android:textColor="#050FA3"
+        android:backgroundTint="#E8EAF6"
+        android:textAllCaps="false"
+        android:textSize="14sp"
+        android:textStyle="bold"/>
 </LinearLayout>

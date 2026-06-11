@@ -26,7 +26,6 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
 
         val rvStock = view.findViewById<RecyclerView>(R.id.rv_stock)
 
-        // SOLUCCIÓN AL ERROR: Inicialización correcta pasando la lambda del clic
         stockAdapter = StockAdapter(emptyList()) { productoSeleccionado ->
             mostrarDetalleProducto(productoSeleccionado)
         }
@@ -45,10 +44,6 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             mostrarPopupFiltros()
         }
     }
-
-    /**
-     * Muestra el diálogo flotante con el detalle del producto seleccionado
-     */
     private fun mostrarDetalleProducto(producto: Producto) {
         val dialog = DetalleProductoDialog.newInstance(producto)
         dialog.show(parentFragmentManager, DetalleProductoDialog.TAG)
@@ -65,6 +60,7 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         val btnCat = dialogView.findViewById<Button>(R.id.btn_cat)
         val btnUbi = dialogView.findViewById<Button>(R.id.btn_ubi)
         val btnEst = dialogView.findViewById<Button>(R.id.btn_est)
+        val btnLimpiar = dialogView.findViewById<Button>(R.id.btn_limpiar)
 
         btnCat.setOnClickListener {
             val opciones = listaCompleta.map { it.categoria }.distinct().toTypedArray()
@@ -81,7 +77,20 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         }
 
         btnEst.setOnClickListener {
-            // Espacio para implementar filtro de estante si se requiere
+            val opciones = arrayOf("Disponible", "Agotado")
+            mostrarListaSeleccion(opciones, "Estado", { seleccion ->
+                val filtrada = when (seleccion) {
+                    "Disponible" -> listaCompleta.filter { it.cantidad > 0 }
+                    "Agotado" -> listaCompleta.filter { it.cantidad <= 0 }
+                    else -> listaCompleta
+                }
+                stockAdapter.actualizarLista(filtrada)
+            }, dialog)
+        }
+
+        btnLimpiar.setOnClickListener {
+            stockAdapter.actualizarLista(listaCompleta)
+            dialog.dismiss()
         }
 
         dialog.show()
@@ -97,14 +106,12 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val textView = view.findViewById<TextView>(android.R.id.text1)
-
-                // CORRECCIÓN: Agregamos el signo '?' después de textView para evitar el error de nulos
                 textView?.setTextColor(Color.parseColor("#050FA3"))
                 textView?.setTypeface(null, Typeface.BOLD)
 
                 return view
             }
-        } // Aquí se cierra correctamente el objeto adapter
+        }
 
         val tituloView = TextView(requireContext()).apply {
             text = "Seleccionar $titulo"

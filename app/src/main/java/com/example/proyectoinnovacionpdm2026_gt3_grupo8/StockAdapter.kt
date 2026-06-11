@@ -14,7 +14,9 @@ class StockAdapter(
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val nombre: TextView = view.findViewById(R.id.tv_nombre)
         val sku: TextView = view.findViewById(R.id.tv_sku)
-        val cantidad: TextView = view.findViewById(R.id.tv_cantidad)
+        val categoria: TextView = view.findViewById(R.id.tv_categoria)
+        val estado: TextView = view.findViewById(R.id.tv_estado) // <- Añadido para el texto verde/rojo
+        val cantidad: TextView = view.findViewById(R.id.tv_cantidad) // <- Para el número de unidades
         val estante: TextView = view.findViewById(R.id.tv_estante)
     }
 
@@ -30,12 +32,24 @@ class StockAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = lista[position]
+
         holder.nombre.text = item.nombre
         holder.sku.text = "SKU: ${item.codigo}"
+        holder.categoria.text = "Categoría: ${item.categoria}"
+
+        // 1. Mostrar número exacto de unidades abajo
         holder.cantidad.text = "${item.cantidad} unidades"
+
+        if (item.cantidad > 0) {
+            holder.estado.text = "Disponible"
+            holder.estado.setTextColor(android.graphics.Color.parseColor("#2E7D32")) // Verde
+        } else {
+            holder.estado.text = "Agotado"
+            holder.estado.setTextColor(android.graphics.Color.parseColor("#D32F2F")) // Rojo fuerte
+        }
+
         holder.estante.text = item.ubicacion
 
-        // Configuración del clic en la celda completa
         holder.itemView.setOnClickListener {
             onItemClick(item)
         }
