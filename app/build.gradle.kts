@@ -39,6 +39,12 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)
 
+    // Autenticación de Firebase
+    implementation("com.google.firebase:firebase-auth")
+
+// Servicios de Google (necesario para Google Sign-In)
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
+
     // Habilita el soporte de APIs modernas
         coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.0.4")
     // UI - Material Design

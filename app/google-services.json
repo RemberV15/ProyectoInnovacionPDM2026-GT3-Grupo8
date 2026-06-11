@@ -12,7 +12,20 @@
           "package_name": "com.example.proyectoinnovacionpdm2026_gt3_grupo8"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "588535123769-hrt3gp9giddn8dn1bogqvd6skuqacfsq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.proyectoinnovacionpdm2026_gt3_grupo8",
+            "certificate_hash": "0e6b759d55c86731b7f447c823cb000ac3252d32"
+          }
+        },
+        {
+          "client_id": "588535123769-ka5e54ed7et71soirjaa05p9j2i8kk1f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBxZTI4-AGHxao6V2WEL6J9tzvBItAhGxM"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "588535123769-ka5e54ed7et71soirjaa05p9j2i8kk1f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
