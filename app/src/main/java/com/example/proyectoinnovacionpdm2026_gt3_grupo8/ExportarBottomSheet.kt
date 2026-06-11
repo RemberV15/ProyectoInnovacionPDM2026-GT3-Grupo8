@@ -265,17 +265,25 @@ class ExportarBottomSheet : BottomSheetDialogFragment() {
                 archivoExcel
             )
 
+            // 5. Crear el Intent para enviar el correo
             val intentCorreo = Intent(Intent.ACTION_SEND).apply {
-                type = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                // Este tipo ("message/rfc822") fuerza a Android a mostrar SOLO apps de correo
+                type = "message/rfc822"
                 putExtra(Intent.EXTRA_EMAIL, arrayOf(correoDestino))
                 putExtra(Intent.EXTRA_SUBJECT, "Reporte de Inventario: $nombreArchivo")
                 putExtra(Intent.EXTRA_TEXT, "Adjunto encontrarás el reporte de inventario generado correctamente desde la aplicación.")
                 putExtra(Intent.EXTRA_STREAM, uriSegura)
+
+                // Mantiene el permiso de lectura del archivo
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                // Mantiene tu app y el correo separados para que se envíe de inmediato
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             }
 
-            startActivity(Intent.createChooser(intentCorreo, "Enviar reporte vía..."))
-            dismiss()
+            val chooser = Intent.createChooser(intentCorreo, "Enviar reporte vía...")
+            startActivity(chooser)
+            dismiss() // Cierra el panel inferior automáticamente
+
 
         } catch (e: Exception) {
             e.printStackTrace()
