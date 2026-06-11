@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -22,23 +23,42 @@
         android:gravity="center_vertical"
         android:layout_marginBottom="16dp">
 
-        <EditText
-            android:id="@+id/et_buscar"
+        <FrameLayout
             android:layout_width="0dp"
-            android:layout_height="50dp"
-            android:layout_weight="1"
-            android:hint="Buscar"
-            android:paddingStart="20dp"
-            android:background="@drawable/bg_search_rounded"
-            android:drawableStart="@drawable/search"
-            android:drawablePadding="10dp" /> <ImageView
-        android:id="@+id/btn_filtro"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/filter_list"
-        android:contentDescription="Filtros"
-        android:scaleType="fitCenter" />
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+
+            <EditText
+                android:id="@+id/et_buscar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Buscar por Nombre o SKU"
+                android:paddingStart="20dp"
+                android:paddingEnd="55dp"
+                android:background="@drawable/bg_search_rounded"
+                android:drawableStart="@drawable/search"
+                android:drawablePadding="10dp" />
+
+            <ImageView
+                android:id="@+id/btn_escanear_buscar"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="end|center_vertical"
+                android:layout_marginEnd="10dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:padding="4dp"
+                android:src="@drawable/barcode_scanner"
+                android:contentDescription="Escanear producto" />
+        </FrameLayout>
+
+        <ImageView
+            android:id="@+id/btn_filtro"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="16dp"
+            android:src="@drawable/filter_list"
+            android:contentDescription="Filtros"
+            android:scaleType="fitCenter" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

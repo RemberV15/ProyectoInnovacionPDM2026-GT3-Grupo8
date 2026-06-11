@@ -8,12 +8,17 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanOptions
 
 class StockFragment : Fragment(R.layout.fragment_stock) {
 
@@ -21,10 +26,21 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
     private lateinit var stockAdapter: StockAdapter
     private var listaCompleta = listOf<Producto>()
 
+    // Lector de códigos de barra integrado en la barra de búsqueda
+    private val lanzarEscaner = registerForActivityResult(ScanContract()) { result ->
+        if (result.contents != null) {
+            val codigoScanned = result.contents
+            val etBuscar = view?.findViewById<EditText>(R.id.et_buscar)
+            etBuscar?.setText(codigoScanned) // Al establecer el texto, el TextWatcher filtra automáticamente
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val rvStock = view.findViewById<RecyclerView>(R.id.rv_stock)
+        val etBuscar = view.findViewById<EditText>(R.id.et_buscar)
+        val btnEscanearBuscar = view.findViewById<ImageView>(R.id.btn_escanear_buscar)
 
         stockAdapter = StockAdapter(emptyList()) { productoSeleccionado ->
             mostrarDetalleProducto(productoSeleccionado)
@@ -40,12 +56,50 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             }
         }
 
+        // Búsqueda en tiempo real filtrando tanto por nombre como por código/SKU
+        etBuscar.addTextChangedListener { text ->
+            val query = text.toString().trim().lowercase()
+            if (query.isEmpty()) {
+                stockAdapter.actualizarLista(listaCompleta)
+            } else {
+                val filtrada = listaCompleta.filter {
+                    it.nombre.lowercase().contains(query) || it.codigo.lowercase().contains(query)
+                }
+                stockAdapter.actualizarLista(filtrada)
+            }
+        }
+
+        // Abrir escáner al pulsar el botón de cámara en la barra
+        btnEscanearBuscar.setOnClickListener {
+            val opciones = ScanOptions().apply {
+                setPrompt("Enfoca el código del producto")
+                setBeepEnabled(true)
+                setOrientationLocked(false)
+            }
+            lanzarEscaner.launch(opciones)
+        }
+
         view.findViewById<ImageView>(R.id.btn_filtro).setOnClickListener {
             mostrarPopupFiltros()
         }
     }
+
     private fun mostrarDetalleProducto(producto: Producto) {
-        val dialog = DetalleProductoDialog.newInstance(producto)
+        val dialog = DetalleProductoDialog.newInstance(producto).apply {
+            actionListener = object : DetalleProductoDialog.OnContextActionListener {
+                override fun onEditarSelected(codigoProducto: String) {
+                    val fragmentEditar = AgregarProductoFragment().apply {
+                        arguments = Bundle().apply {
+                            putString("ARG_CODIGO_EDITAR", codigoProducto)
+                        }
+                    }
+                    parentFragmentManager.beginTransaction()
+                        .replace(R.id.content_container, fragmentEditar)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+        }
         dialog.show(parentFragmentManager, DetalleProductoDialog.TAG)
     }
 
@@ -89,6 +143,8 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         }
 
         btnLimpiar.setOnClickListener {
+            // Limpia el buscador y restablece los adaptadores
+            view?.findViewById<EditText>(R.id.et_buscar)?.setText("")
             stockAdapter.actualizarLista(listaCompleta)
             dialog.dismiss()
         }
