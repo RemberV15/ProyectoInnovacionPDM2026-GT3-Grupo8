@@ -9,14 +9,38 @@
     <string name="hint_proveedor">Proveedor</string>
     <string name="label_cantidad">Cantidad</string>
     <string name="hint_ubicacion">Ubicación</string>
+
     <string name="btn_guardar">Guardar Producto ✓</string>
     <string name="btn_actualizar">Actualizar Producto ✓</string>
     <string name="btn_cancelar">Cancelar</string>
     <string name="btn_menos">-</string>
     <string name="btn_mas">+</string>
     <string name="val_cero">0</string>
+
     <string name="detalle_format">Categoría: %1$s\nSKU: %2$s</string>
     <string name="msg_actualizando">Actualizando producto…</string>
     <string name="msg_guardando">Guardando producto…</string>
     <string name="desc_imagen_producto">Vista previa del producto</string>
+    <string name="msg_error">Error: %1$s</string>
+
+    <string name="btn_eliminar">Eliminar Producto</string>
+    <string name="titulo_eliminar">¿Eliminar producto?</string>
+    <string name="msg_confirmar_eliminar">Esta acción borrará el producto de la base de datos permanentemente. ¿Estás seguro?</string>
+    <string name="btn_si_eliminar">Sí, eliminar</string>
+    <string name="msg_eliminando">Eliminando producto…</string>
+    <string name="msg_eliminado_exito">¡Producto eliminado con éxito!</string>
+
+    <string name="titulo_detalles_producto">Detalles del Producto</string>
+    <string name="desc_cerrar">Cerrar</string>
+    <string name="sku_placeholder">SKU: ----</string>
+    <string name="label_estado">Estado:</string>
+    <string name="estado_disponible">✔ Disponible</string>
+    <string name="label_cantidad_total">Cantidad Total:</string>
+    <string name="cantidad_default">0 unidades</string>
+    <string name="label_categoria">Categoría:</string>
+    <string name="placeholder_guiones">----</string>
+    <string name="label_ubicacion">Ubicación:</string>
+    <string name="label_proveedor">Proveedor:</string>
+    <string name="btn_editar">Editar</string>
+    <string name="btn_ver_stock">Ver Stock</string>
 </resources>

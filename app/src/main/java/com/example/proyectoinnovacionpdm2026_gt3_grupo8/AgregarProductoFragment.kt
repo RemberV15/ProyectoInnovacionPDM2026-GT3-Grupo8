@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.speech.RecognizerIntent
 import android.util.Base64
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,8 +79,23 @@ class AgregarProductoFragment : Fragment() {
 
     private val lanzarEscanerSKU = registerForActivityResult(ScanContract()) { result ->
         if (result.contents != null) {
-            etSKU.setText(result.contents)
-            Toast.makeText(context, "Código escaneado", Toast.LENGTH_SHORT).show()
+            val codigoEscaneado = result.contents
+
+            mostrarToastArriba("Verificando disponibilidad...")
+
+            db.collection("productos").document(codigoEscaneado).get()
+                .addOnSuccessListener { document ->
+                    if (document != null && document.exists()) {
+                        mostrarToastArriba("Error: El producto con SKU $codigoEscaneado YA EXISTE.")
+                        etSKU.setText("")
+                    } else {
+                        etSKU.setText(codigoEscaneado)
+                        mostrarToastArriba("Código válido")
+                    }
+                }
+                .addOnFailureListener {
+                    mostrarToastArriba("Error al verificar conexión")
+                }
         }
     }
 
@@ -130,7 +146,11 @@ class AgregarProductoFragment : Fragment() {
             val skuRecibido = arguments?.getString("sku_enviado_escaner")
             if (!skuRecibido.isNullOrEmpty()) etSKU.setText(skuRecibido)
             tilSKU.setEndIconOnClickListener {
-                val opciones = ScanOptions().apply { setPrompt("Apunta la cámara al código de barras"); setBeepEnabled(true); setOrientationLocked(false) }
+                mostrarToastArriba("Tip: Usa Volumen+ para encender la linterna")
+                val opciones = ScanOptions().apply {
+                    setBeepEnabled(true)
+                    setOrientationLocked(false)
+                }
                 lanzarEscanerSKU.launch(opciones)
             }
         }
@@ -155,17 +175,17 @@ class AgregarProductoFragment : Fragment() {
             val cat = autoCompleteCategoria.text.toString().trim()
 
             if (nom.isEmpty() || des.isEmpty() || cod.isEmpty() || ub.isEmpty() || prov.isEmpty() || cat.isEmpty()) {
-                Toast.makeText(context, "⚠️ Debes rellenar TODOS los campos.", Toast.LENGTH_SHORT).show()
+                mostrarToastArriba("Debes rellenar TODOS los campos.")
                 return@setOnClickListener
             }
 
             if (cod.contains("/")) {
-                Toast.makeText(context, "⚠️ SKU inválido.", Toast.LENGTH_LONG).show()
+                mostrarToastArriba("SKU inválido.")
                 return@setOnClickListener
             }
 
             btnGuardar.isEnabled = false
-            Toast.makeText(context, if (codigoAEditar != null) getString(R.string.msg_actualizando) else getString(R.string.msg_guardando), Toast.LENGTH_SHORT).show()
+            mostrarToastArriba(if (codigoAEditar != null) getString(R.string.msg_actualizando) else getString(R.string.msg_guardando))
 
             val base64Image = imageBitmap?.let { bitmapToBase64(it) } ?: ""
 
@@ -184,7 +204,7 @@ class AgregarProductoFragment : Fragment() {
             if (codigoAEditar == null) {
                 db.collection("productos").document(cod).get().addOnSuccessListener { document ->
                     if (document != null && document.exists()) {
-                        Toast.makeText(context, "❌ Ya existe un producto con SKU $cod", Toast.LENGTH_LONG).show()
+                        mostrarToastArriba("Ya existe un producto con SKU $cod")
                         btnGuardar.isEnabled = true
                     } else {
                         guardarEnFirebase(cod, productoData)
@@ -197,14 +217,20 @@ class AgregarProductoFragment : Fragment() {
         btnCancelar.setOnClickListener { parentFragmentManager.popBackStack() }
     }
 
+    private fun mostrarToastArriba(mensaje: String) {
+        val toast = Toast.makeText(context, mensaje, Toast.LENGTH_LONG)
+        toast.setGravity(Gravity.TOP or Gravity.CENTER_HORIZONTAL, 0, 150)
+        toast.show()
+    }
+
     private fun guardarEnFirebase(codigo: String, datos: HashMap<String, Any?>) {
         db.collection("productos").document(codigo).set(datos)
             .addOnSuccessListener {
-                Toast.makeText(context, "¡Operación exitosa!", Toast.LENGTH_SHORT).show()
+                mostrarToastArriba("¡Operación exitosa!")
                 parentFragmentManager.popBackStack()
             }
             .addOnFailureListener { _ ->
-                Toast.makeText(context, "Error al guardar los datos", Toast.LENGTH_LONG).show()
+                mostrarToastArriba("Error al guardar los datos")
                 view?.findViewById<MaterialButton>(R.id.btnGuardarProducto)?.isEnabled = true
             }
     }
@@ -228,7 +254,7 @@ class AgregarProductoFragment : Fragment() {
                 }
             }
         }.addOnFailureListener { _ ->
-            Toast.makeText(context, "Error al descargar datos", Toast.LENGTH_SHORT).show()
+            mostrarToastArriba("Error al descargar datos")
         }
     }
 
@@ -240,6 +266,6 @@ class AgregarProductoFragment : Fragment() {
 
     private fun activarDictadoPorVoz() {
         try { lanzarSpeechToText.launch(Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH).putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM)) }
-        catch (_: Exception) { Toast.makeText(context, "No disponible", Toast.LENGTH_SHORT).show() }
+        catch (_: Exception) { mostrarToastArriba("No disponible") }
     }
 }

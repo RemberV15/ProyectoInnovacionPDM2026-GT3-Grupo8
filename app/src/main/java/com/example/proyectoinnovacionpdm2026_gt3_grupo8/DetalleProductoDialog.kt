@@ -1,6 +1,7 @@
 package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.DialogInterface
 import android.graphics.BitmapFactory
 import android.graphics.Color
@@ -18,11 +19,12 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FirebaseFirestore
 
 class DetalleProductoDialog : DialogFragment() {
 
     interface OnContextActionListener {
-        fun onEditarSelected(codigoProducto: String) // Exigimos enviar el código
+        fun onEditarSelected(codigoProducto: String)
     }
 
     var actionListener: OnContextActionListener? = null
@@ -61,7 +63,6 @@ class DetalleProductoDialog : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val tvTituloDialog = view.findViewById<TextView>(R.id.tvTituloDialog)
         val tvDetalleNombre = view.findViewById<TextView>(R.id.tvDetalleNombre)
         val tvDetalleSKU = view.findViewById<TextView>(R.id.tvDetalleSKU)
         val tvDetalleEstado = view.findViewById<TextView>(R.id.tvDetalleEstado)
@@ -73,8 +74,8 @@ class DetalleProductoDialog : DialogFragment() {
 
         val btnCerrarX = view.findViewById<ImageButton>(R.id.btnCerrarX)
         val btnEditar = view.findViewById<MaterialButton>(R.id.btnDetalleEditar)
-        val btnCerrar = view.findViewById<MaterialButton>(R.id.btnDetalleCerrar)
         val btnHistorial = view.findViewById<MaterialButton>(R.id.btnDetalleHistorial)
+        val btnEliminar = view.findViewById<MaterialButton>(R.id.btnDetalleEliminar)
 
         val nombreProd = arguments?.getString("ARG_NOMBRE") ?: "Desconocido"
         val codigoProd = arguments?.getString("ARG_CODIGO") ?: ""
@@ -92,7 +93,6 @@ class DetalleProductoDialog : DialogFragment() {
             } catch (e: Exception) { e.printStackTrace() }
         }
 
-        tvTituloDialog.text = "Detalles del Producto"
         tvDetalleNombre.text = nombreProd
         tvDetalleSKU.text = "SKU: $codigoProd"
         tvDetalleUbicacion.text = ubicacionProd
@@ -109,16 +109,44 @@ class DetalleProductoDialog : DialogFragment() {
         }
 
         btnCerrarX.setOnClickListener { dismiss() }
-        btnCerrar.setOnClickListener { dismiss() }
 
         btnHistorial.setOnClickListener {
-            Toast.makeText(requireContext(), "Abriendo Historial...", Toast.LENGTH_SHORT).show()
+            dismiss()
+            requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.content_container, StockFragment())
+                .addToBackStack(null)
+                .commit()
         }
 
         btnEditar.setOnClickListener {
             actionListener?.onEditarSelected(codigoProd)
             dismiss()
         }
+
+        btnEliminar.setOnClickListener {
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.titulo_eliminar)
+                .setMessage(R.string.msg_confirmar_eliminar)
+                .setPositiveButton(R.string.btn_si_eliminar) { _, _ ->
+                    eliminarProductoDeFirebase(codigoProd)
+                }
+                .setNegativeButton(R.string.btn_cancelar, null)
+                .show()
+        }
+    }
+
+    private fun eliminarProductoDeFirebase(codigo: String) {
+        Toast.makeText(context, R.string.msg_eliminando, Toast.LENGTH_SHORT).show()
+
+        FirebaseFirestore.getInstance().collection("productos").document(codigo)
+            .delete()
+            .addOnSuccessListener {
+                Toast.makeText(context, R.string.msg_eliminado_exito, Toast.LENGTH_SHORT).show()
+                dismiss()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(context, getString(R.string.msg_error, e.message), Toast.LENGTH_LONG).show()
+            }
     }
 
     companion object {

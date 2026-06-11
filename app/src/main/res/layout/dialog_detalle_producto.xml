@@ -30,7 +30,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="Detalles del Producto"
+                    android:layout_alignParentStart="true"
+                    android:layout_toStartOf="@id/btnCerrarX"
+                    android:layout_marginEnd="8dp"
+                    android:text="@string/titulo_detalles_producto"
                     android:textColor="#333333"
                     android:textSize="14sp" />
                 <ImageButton
@@ -41,7 +44,7 @@
                     android:src="@android:drawable/ic_menu_close_clear_cancel"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     app:tint="#333333"
-                    android:contentDescription="Cerrar" />
+                    android:contentDescription="@string/desc_cerrar" />
             </RelativeLayout>
 
             <com.google.android.material.card.MaterialCardView
@@ -59,6 +62,7 @@
                     android:layout_height="match_parent"
                     android:scaleType="centerInside"
                     android:padding="12dp"
+                    android:contentDescription="@string/desc_imagen_producto"
                     tools:src="@android:drawable/ic_menu_camera" />
             </com.google.android.material.card.MaterialCardView>
 
@@ -78,7 +82,7 @@
                         android:id="@+id/tvDetalleNombre"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Nombre del Producto"
+                        android:text="@string/hint_nombre"
                         android:textSize="22sp"
                         android:textStyle="bold"
                         android:textColor="#000000" />
@@ -86,7 +90,7 @@
                         android:id="@+id/tvDetalleSKU"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SKU: ----"
+                        android:text="@string/sku_placeholder"
                         android:textColor="#555555"
                         android:textSize="13sp"
                         android:layout_marginTop="2dp"/>
@@ -99,6 +103,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:scaleType="fitCenter"
+                    android:contentDescription="@string/hint_sku"
                     tools:src="@android:drawable/ic_menu_sort_alphabetically"
                     app:tint="#000000" />
             </RelativeLayout>
@@ -108,6 +113,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="2"
+                android:baselineAligned="false"
                 android:layout_marginBottom="24dp">
 
                 <LinearLayout
@@ -116,14 +122,14 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Estado:" android:textSize="12sp" android:textColor="#666666"/>
-                    <TextView android:id="@+id/tvDetalleEstado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="✔ Disponible" android:textStyle="bold" android:textColor="#2E7D32" android:textSize="14sp" android:layout_marginBottom="12dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_estado" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleEstado" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/estado_disponible" android:textStyle="bold" android:textColor="#2E7D32" android:textSize="14sp" android:layout_marginBottom="12dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Cantidad Total:" android:textSize="12sp" android:textColor="#666666"/>
-                    <TextView android:id="@+id/tvDetalleCantidad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 unidades" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_cantidad_total" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleCantidad" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/cantidad_default" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Categoría:" android:textSize="12sp" android:textColor="#666666"/>
-                    <TextView android:id="@+id/tvDetalleCategoria" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="----" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_categoria" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleCategoria" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/placeholder_guiones" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,15 +138,15 @@
                     android:layout_weight="1"
                     android:orientation="vertical">
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ubicación:" android:textSize="12sp" android:textColor="#666666"/>
-                    <TextView android:id="@+id/tvDetalleUbicacion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="----" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_ubicacion" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:id="@+id/tvDetalleUbicacion" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/placeholder_guiones" android:textStyle="bold" android:textColor="#333333" android:textSize="14sp" android:layout_marginBottom="12dp"/>
 
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Proveedor:" android:textSize="12sp" android:textColor="#666666"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/label_proveedor" android:textSize="12sp" android:textColor="#666666"/>
 
                     <TextView android:id="@+id/tvDetalleProveedor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Herman Miller Inc."
+                        android:text="@string/placeholder_guiones"
                         android:textStyle="bold"
                         android:textColor="#333333"
                         android:textSize="14sp"/>
@@ -150,56 +156,75 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="12dp">
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    android:baselineAligned="false"
+                    android:layout_marginBottom="12dp">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDetalleEditar"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:minHeight="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="6dp"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/btn_editar"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="#333333"
+                        app:strokeColor="#CCCCCC"
+                        app:icon="@android:drawable/ic_menu_edit"
+                        app:iconPadding="4dp"
+                        app:iconTint="#333333"
+                        app:cornerRadius="16dp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnDetalleHistorial"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:minHeight="56dp"
+                        android:layout_weight="1"
+                        android:layout_marginStart="6dp"
+                        android:paddingHorizontal="8dp"
+                        android:text="@string/btn_ver_stock"
+                        android:textAllCaps="false"
+                        android:textStyle="bold"
+                        android:textSize="14sp"
+                        android:textColor="#333333"
+                        app:strokeColor="#CCCCCC"
+                        app:icon="@android:drawable/ic_menu_recent_history"
+                        app:iconPadding="4dp"
+                        app:iconTint="#333333"
+                        app:cornerRadius="16dp"/>
+                </LinearLayout>
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetalleEditar"
+                    android:id="@+id/btnDetalleEliminar"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Editar Producto"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:minHeight="56dp"
+                    android:text="@string/btn_eliminar"
                     android:textAllCaps="false"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    app:strokeColor="#CCCCCC"
-                    app:icon="@android:drawable/ic_menu_edit"
-                    app:iconTint="#333333"
-                    app:cornerRadius="16dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnDetalleCerrar"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="50dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Cerrar Detalles"
-                    android:textAllCaps="false"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    app:strokeColor="#CCCCCC"
-                    app:icon="@android:drawable/ic_menu_close_clear_cancel"
-                    app:iconTint="#333333"
+                    android:textSize="14sp"
+                    android:textColor="#D32F2F"
+                    app:strokeColor="#D32F2F"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconGravity="textStart"
+                    app:iconTint="#D32F2F"
                     app:cornerRadius="16dp"/>
             </LinearLayout>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnDetalleHistorial"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="Historial de Stock"
-                android:textAllCaps="false"
-                android:textColor="#333333"
-                app:strokeColor="#CCCCCC"
-                app:icon="@android:drawable/ic_menu_recent_history"
-                app:iconTint="#333333"
-                app:cornerRadius="12dp"/>
         </LinearLayout>
     </ScrollView>
 </com.google.android.material.card.MaterialCardView>
