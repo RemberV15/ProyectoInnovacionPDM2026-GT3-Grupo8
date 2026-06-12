@@ -11,14 +11,12 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
-import com.journeyapps.barcodescanner.ScanContract
-import com.journeyapps.barcodescanner.ScanOptions
 
 class StockFragment : Fragment(R.layout.fragment_stock) {
 
@@ -26,21 +24,11 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
     private lateinit var stockAdapter: StockAdapter
     private var listaCompleta = listOf<Producto>()
 
-    // Lector de códigos de barra integrado en la barra de búsqueda
-    private val lanzarEscaner = registerForActivityResult(ScanContract()) { result ->
-        if (result.contents != null) {
-            val codigoScanned = result.contents
-            val etBuscar = view?.findViewById<EditText>(R.id.et_buscar)
-            etBuscar?.setText(codigoScanned) // Al establecer el texto, el TextWatcher filtra automáticamente
-        }
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val rvStock = view.findViewById<RecyclerView>(R.id.rv_stock)
         val etBuscar = view.findViewById<EditText>(R.id.et_buscar)
-        val btnEscanearBuscar = view.findViewById<ImageView>(R.id.btn_escanear_buscar)
 
         stockAdapter = StockAdapter(emptyList()) { productoSeleccionado ->
             mostrarDetalleProducto(productoSeleccionado)
@@ -56,7 +44,6 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             }
         }
 
-        // Búsqueda en tiempo real filtrando tanto por nombre como por código/SKU
         etBuscar.addTextChangedListener { text ->
             val query = text.toString().trim().lowercase()
             if (query.isEmpty()) {
@@ -67,16 +54,6 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
                 }
                 stockAdapter.actualizarLista(filtrada)
             }
-        }
-
-        // Abrir escáner al pulsar el botón de cámara en la barra
-        btnEscanearBuscar.setOnClickListener {
-            val opciones = ScanOptions().apply {
-                setPrompt("Enfoca el código del producto")
-                setBeepEnabled(true)
-                setOrientationLocked(false)
-            }
-            lanzarEscaner.launch(opciones)
         }
 
         view.findViewById<ImageView>(R.id.btn_filtro).setOnClickListener {
@@ -162,7 +139,8 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
             override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
                 val view = super.getView(position, convertView, parent)
                 val textView = view.findViewById<TextView>(android.R.id.text1)
-                textView?.setTextColor(Color.parseColor("#050FA3"))
+
+                textView?.setTextColor("#050FA3".toColorInt())
                 textView?.setTypeface(null, Typeface.BOLD)
 
                 return view
@@ -170,7 +148,7 @@ class StockFragment : Fragment(R.layout.fragment_stock) {
         }
 
         val tituloView = TextView(requireContext()).apply {
-            text = "Seleccionar $titulo"
+            text = getString(R.string.seleccionar_formato, titulo)
             textSize = 18f
             setTypeface(null, Typeface.BOLD)
             setTextColor(Color.BLACK)

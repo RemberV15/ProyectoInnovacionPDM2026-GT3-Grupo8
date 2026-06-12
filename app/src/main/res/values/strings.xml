@@ -43,4 +43,9 @@
     <string name="label_proveedor">Proveedor:</string>
     <string name="btn_editar">Editar</string>
     <string name="btn_ver_stock">Ver Stock</string>
+
+    <string name="titulo_stock_total">Gestor de Inventario Inteligente - Stock Total</string>
+    <string name="hint_buscar">Buscar por Nombre o SKU</string>
+    <string name="desc_filtros">Filtros</string>
+    <string name="seleccionar_formato">Seleccionar %1$s</string>
 </resources>
