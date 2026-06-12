@@ -41,8 +41,10 @@ class LoginActivity : AppCompatActivity() {
         val tvIngresarPin = findViewById<TextView>(R.id.tv_ingresar_con_pin)
         tvIngresarPin.setOnClickListener {
             val sharedPreferences = getSharedPreferences("AppPref", Context.MODE_PRIVATE)
-            sharedPreferences.edit().putString("USER_PIN", "3475").apply()
 
+            sharedPreferences.edit().putBoolean("ES_FALLBACK", true).apply()
+
+            Toast.makeText(this, "Modo alternativo activado", Toast.LENGTH_SHORT).show()
             startActivity(Intent(this, PinActivity::class.java))
             finish()
         }
@@ -61,6 +63,10 @@ class LoginActivity : AppCompatActivity() {
                     .addOnCompleteListener(this) { authTask ->
                         if (authTask.isSuccessful) {
                             Toast.makeText(this, "¡Inicio de sesión exitoso!", Toast.LENGTH_SHORT).show()
+
+                            val sharedPreferences = getSharedPreferences("AppPref", Context.MODE_PRIVATE)
+                            sharedPreferences.edit().putBoolean("ES_FALLBACK", false).apply()
+
                             startActivity(Intent(this, PinActivity::class.java))
                             finish()
                         } else {
