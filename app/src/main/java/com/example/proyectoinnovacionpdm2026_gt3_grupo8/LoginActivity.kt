@@ -1,7 +1,9 @@
 package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -24,9 +26,8 @@ class LoginActivity : AppCompatActivity() {
 
         auth = FirebaseAuth.getInstance()
 
-        // Configuración de inicio de sesión con Google
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id)) // Asegúrate de tener tu google-services.json actualizado
+            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
             .build()
 
@@ -35,6 +36,15 @@ class LoginActivity : AppCompatActivity() {
         findViewById<MaterialCardView>(R.id.btn_google_login).setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
+        }
+
+        val tvIngresarPin = findViewById<TextView>(R.id.tv_ingresar_con_pin)
+        tvIngresarPin.setOnClickListener {
+            val sharedPreferences = getSharedPreferences("AppPref", Context.MODE_PRIVATE)
+            sharedPreferences.edit().putString("USER_PIN", "3475").apply()
+
+            startActivity(Intent(this, PinActivity::class.java))
+            finish()
         }
     }
 
@@ -46,14 +56,11 @@ class LoginActivity : AppCompatActivity() {
                 val task = GoogleSignIn.getSignedInAccountFromIntent(data)
                 val account = task.getResult(ApiException::class.java)
 
-                // Autenticar en Firebase con la cuenta de Google
                 val credential = GoogleAuthProvider.getCredential(account.idToken, null)
                 auth.signInWithCredential(credential)
                     .addOnCompleteListener(this) { authTask ->
                         if (authTask.isSuccessful) {
                             Toast.makeText(this, "¡Inicio de sesión exitoso!", Toast.LENGTH_SHORT).show()
-
-                            // Redirigir a la pantalla de configuración de PIN
                             startActivity(Intent(this, PinActivity::class.java))
                             finish()
                         } else {
