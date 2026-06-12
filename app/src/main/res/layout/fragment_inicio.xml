@@ -15,11 +15,24 @@
         android:layout_margin="20dp"
         android:text="Gestor de Inventario\nInteligente - Inicio"
         android:textColor="#000000"
-        android:textSize="26sp"
+        android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_logout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/btn_logout"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/exit_to_app"
+        android:contentDescription="Cerrar sesión"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        app:tint="@color/primary_blue"
+        app:layout_constraintTop_toTopOf="@+id/tv_titulo_principal"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_titulo_principal"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/card_dashboard"
@@ -108,6 +121,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="16dp"
         android:src="@drawable/export_notes_24"
         app:backgroundTint="@color/primary_blue"
@@ -120,6 +134,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp"
         android:layout_marginBottom="90dp"
         android:src="@drawable/add_a_photo"
         app:backgroundTint="@color/primary_blue"

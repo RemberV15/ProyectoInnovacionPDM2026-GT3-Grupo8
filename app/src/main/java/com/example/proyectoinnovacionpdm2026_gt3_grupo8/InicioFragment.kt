@@ -1,29 +1,36 @@
 package com.example.proyectoinnovacionpdm2026_gt3_grupo8
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
 class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
     private val db = FirebaseFirestore.getInstance()
     private lateinit var recienteAdapter: RecienteAdapter
+    private lateinit var auth: FirebaseAuth
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        auth = FirebaseAuth.getInstance()
+
         val rvRecientes = view.findViewById<RecyclerView>(R.id.rv_recientes)
         val tvContador = view.findViewById<TextView>(R.id.tv_dashboard_contador)
         val fabCamara = view.findViewById<FloatingActionButton>(R.id.fab_camara)
-
-        // 1. Declaramos el nuevo botón de exportar/enviar
         val fabExportar = view.findViewById<FloatingActionButton>(R.id.fab_exportar)
+
+        // Referencia al nuevo botón superior de Logout
+        val btnLogout = view.findViewById<ImageView>(R.id.btn_logout)
 
         recienteAdapter = RecienteAdapter(arrayListOf())
         rvRecientes.layoutManager = LinearLayoutManager(context)
@@ -38,19 +45,23 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
             }
         }
 
-        // 2. Agregamos la navegación del botón Exportar
+        // Lógica del botón Exportar
         fabExportar.setOnClickListener {
-            // Un Toast de prueba mientras creas la pantalla
-            Toast.makeText(context, "Abriendo pantalla de envío...", Toast.LENGTH_SHORT).show()
+            val bottomSheet = ExportarBottomSheet()
+            bottomSheet.show(parentFragmentManager, "ExportarBottomSheet")
+        }
 
-            // TODO: Agregar la funcionalidad de la nuevo pop up / pantalla
-            /*
-            parentFragmentManager.beginTransaction().apply {
-                replace(R.id.content_container, TuFragmentoDeEnvio())
-                addToBackStack(null)
-                commit()
+        // Lógica del botón superior Cerrar Sesión
+        btnLogout.setOnClickListener {
+            auth.signOut()
+            Toast.makeText(context, "Sesión cerrada correctamente", Toast.LENGTH_SHORT).show()
+
+            // Redirigimos a LoginActivity limpiando el historial
+            val intent = Intent(activity, LoginActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             }
-            */
+            startActivity(intent)
+            activity?.finish()
         }
 
         db.collection("productos")
@@ -66,8 +77,6 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
 
                     val listaProductosReal = snapshot.toObjects(Producto::class.java)
 
-                    // MODIFICACIÓN CLAVE: Usamos tu variable 'timestamp'.
-                    // Lo convertimos a Date y sacamos el tiempo. Si es nulo, usa 0L (lo manda al fondo).
                     val listaOrdenada = listaProductosReal
                         .sortedByDescending { it.timestamp?.toDate()?.time ?: 0L }
                         .take(5)
@@ -75,10 +84,5 @@ class InicioFragment : Fragment(R.layout.fragment_inicio) {
                     recienteAdapter.actualizarLista(listaOrdenada)
                 }
             }
-
-        fabExportar.setOnClickListener {
-            val bottomSheet = ExportarBottomSheet()
-            bottomSheet.show(parentFragmentManager, "ExportarBottomSheet")
-        }
     }
 }

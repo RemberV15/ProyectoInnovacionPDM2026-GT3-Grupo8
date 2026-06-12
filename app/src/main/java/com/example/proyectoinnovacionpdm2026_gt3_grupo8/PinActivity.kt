@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import com.google.android.material.textfield.TextInputEditText
@@ -93,16 +94,16 @@ class PinActivity : AppCompatActivity() {
                 }
             }
         }
-    }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
 
-        val sharedPreferences = getSharedPreferences("AppPref", Context.MODE_PRIVATE)
-        sharedPreferences.edit().putBoolean("ES_FALLBACK", false).apply()
+                sharedPreferences.edit().putBoolean("ES_FALLBACK", false).apply()
 
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
+                val intent = Intent(this@PinActivity, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+        })
     }
 }
